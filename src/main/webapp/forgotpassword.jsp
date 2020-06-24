@@ -98,6 +98,9 @@ pageEncoding="ISO-8859-1"%>
                             <div class="form-group">
                                 <button id="login" name="login" type="submit" class="btn btn-primary btn-block"> Submit  </button>
                             </div> <!-- form-group// -->
+                            <div class="container signin">
+                            	<p>Remember the password.!? <a href="home.jsp">Sign in</a>.</p>
+                        	</div>
                         </form>
                    </div>
               </div>
