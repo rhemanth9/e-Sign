@@ -84,6 +84,7 @@ pageEncoding="ISO-8859-1"%>
    <!--  <div class="imgcontainer">
         <img src="../images/logo.png" alt="Avatar" class="avatar">
     </div>-->
+    
     <div class="container">
 
         <div class="row" >
