@@ -50,14 +50,16 @@
 
 	<caption>
 		<h2>Welcome ${loginDetails.firstname}</h2>
-		<h2>${exists}</h2>
+		<h2>${message}</h2>
 		<h2>${notexists}</h2>
+		<img src="data:image/png;base64,${imageDetails}" width="500" height="300"/><br>
 	</caption>
 	
+	<!--
 	<form action="insertImage" modelAttribute="imageDetails" enctype="multipart/form-data" method="post" id="loginForm">
 
 		<pre>
-		<h3>${success}</h3>
+		<h3>${error}</h3>
 		<h3>${error }</h3>
 			
 		<input type="hidden" value="${loginDetails.email}"
@@ -70,7 +72,7 @@
 
 	</form>
 	
-	<a href="uploadsignature.jsp">Upload Signature</a>
+	  <a href="uploadsignature.jsp">Upload Signature</a>-->
 	<button class="button button1" href="uploadsignature.jsp" onclick="window.location.href='/e-sign/uploadsignature.jsp'">Upload Signature</button>
 	<button class="button button2" href="drawsign.jsp" onclick="window.location.href='/e-sign/drawsign.jsp'">Draw Signature</button>
 

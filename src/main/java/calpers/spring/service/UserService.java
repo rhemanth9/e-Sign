@@ -14,4 +14,5 @@ public interface UserService {
 	  int updateUser(User user);
 	  int insertImage(String email,MultipartFile photo);
 	  Image validateEsign(String email);
+	  
 }

@@ -20,7 +20,8 @@ import calpers.spring.model.Login;
 import calpers.spring.model.User;
 import calpers.spring.service.UserService;
 @Controller
-@SessionAttributes("loginDetails")
+@SessionAttributes({"loginDetails","imageDetails"})
+//@SessionAttributes("imageDetails")
 public class LoginController {
 	@Autowired
 	UserService userService;
@@ -46,19 +47,26 @@ public class LoginController {
 			mav.addObject("phone", user.getPhone());
 			mav.addObject("address", user.getAddress());
 			mav.addObject("organization", user.getOrganization());
-			mav.addObject("loginDetails", user);
+
 		}
 		else {
 			mav = new ModelAndView("home");
 			mav.addObject("message", "Username or Password is wrong!!");
 		}
-		
+
 		Image image = userService.validateEsign(user.getEmail());
 		if(null!=image && null!=image.getEmail()) {
-			mav.addObject("exists","Your signature is already uploaded. Would you like to update it?");
+			System.out.println(image.getEmail());
+			mav.addObject("image",image.getBase64Image());
+			mav.addObject("imageDetails", image.getBase64Image());
+			mav.addObject("message", image.getMessage());
 		}
-		else
+		else {
 			mav.addObject("notexists","Looks like your signature is not uploaded. Please upload or draw it!");
+			
+		}
+		mav.addObject("loginDetails", user);
+
 		return mav;
 	}
 
@@ -66,24 +74,30 @@ public class LoginController {
 	@RequestMapping(value = "/fetchDetails", method = RequestMethod.GET)
 	public String fetchDetails(HttpServletRequest request, HttpServletResponse response,
 			HttpSession session) {
-		
+
 		return "welcome";
 	}
-	
+
 	@RequestMapping(value = "/insertImage", method = RequestMethod.POST)
 	public ModelAndView insertImage(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("email") String email,@RequestParam("image") MultipartFile image) {
 		//System.out.println(image.getImage());
 		int res=0;
+		ModelAndView mav = null;
 		res=userService.insertImage(email,image);
 		if(res!=0) {
-			  String success="Image successfully inserted.!";
-		  return new ModelAndView("login", "success", success);
-		  }
-		  else {
-			  String error="Please try again :(";
-			  return new ModelAndView("login", "error", error);
-		  }
+			mav = new ModelAndView("uploadsignature");
+			Image image1 = userService.validateEsign(email);
+			mav.addObject("imageDetails", image1.getBase64Image());
+			mav.addObject("success", "Image successfully inserted.!");
+			return mav;
+		}
+		else {
+			String error="Please try again :(";
+			return new ModelAndView("login", "error", error);
+		}
+
+
 	}
 
 	@Autowired
@@ -127,14 +141,14 @@ public class LoginController {
 			return new ModelAndView("welcome","error",error);
 		}
 	}
-	
-	
+
+
 
 	@RequestMapping(value = {"/logout"}, method = RequestMethod.GET)
-    public String logout(HttpSession session, HttpServletRequest request, HttpServletResponse response){
+	public String logout(HttpSession session, HttpServletRequest request, HttpServletResponse response){
 		request.getSession().invalidate();
-        return "home";
-    }
+		return "home";
+	}
 	/* @WebServlet("/logout")
   public class LogoutServlet extends HttpServlet {
 
