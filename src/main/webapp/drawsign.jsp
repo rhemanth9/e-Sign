@@ -320,15 +320,17 @@
 }
 
 .save_box {
-	border: 1px solid #bbb;
+	/*border: 1px solid #bbb;*/
+	text-align: left;
 	border-radius: 4px;
 	padding: 5px;
 	clear: both;
 }
 
 #image_display {
-	width: 80px;
-	height: 60px;
+	
+	width: 150px;
+	height: 80px;
 	border: 1px solid #000;
 	margin: 15px;
 }
@@ -391,7 +393,7 @@
 	</div>
 	<div class="rightside">
 		<br> <input class="button button1" type="submit"
-			value="Clear Sketchpad" id="clearbutton"
+			value="Clear" id="clearbutton"
 			onclick="clearCanvas(canvas,ctx);">
 	</div>
 	<br>
@@ -412,11 +414,13 @@
 				name="save_remote_data" id="save_remote_data">
 		</form>
 	</div>
+	
 	<div class="save_box">
-		<center>
+	<h4>You can see how your sign looks like in the below window</h4>
+		<left>
 			<!-- Our Sketchpad thumbnail -->
 			<img id="image_display">
-		</center>
+		</left>
 	</div>
 	</div>
 

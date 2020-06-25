@@ -75,5 +75,6 @@
 	  <a href="uploadsignature.jsp">Upload Signature</a>-->
 	<button class="button button1" href="uploadsignature.jsp" onclick="window.location.href='/e-sign/uploadsignature.jsp'">Upload Signature</button>
 	<button class="button button2" href="drawsign.jsp" onclick="window.location.href='/e-sign/drawsign.jsp'">Draw Signature</button>
+   <!--   <iframe src ="uploadsignature.jsp" width="100%" height="1100" frameborder="0px"></iframe> -->
 </body>
 </html>

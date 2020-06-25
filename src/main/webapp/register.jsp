@@ -10,7 +10,7 @@
         body {font-family: Arial, Helvetica, sans-serif;}
         form {border: 3px solid #f1f1f1;}
 
-        input[type=text], input[type=password] {
+        input[type=text], input[type=password],input[type=email] {
             width: 90%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -99,11 +99,11 @@
             <div class="card" style="align-content: center; width: 100%">
                 <article class="card-body">
                     <div class="container"  >
-                    	<h4>${error}</h4>
+                    	<h6>${error}</h6>
                         <h1>Register</h1>
                         
-                        <label path="username">Username</label>
-                        <input path="username" type="text" placeholder="Enter User Name" name="username" id="username" required>
+                       <!-- <label path="username">Username</label>
+                        <input path="username" type="text" placeholder="Enter User Name" name="username" id="username" required> --> 
                         
                         <label for="firstname" path="username"><b>First Name</b></label>
                         <input path="username" type="text" placeholder="Enter First Name" name="firstname" id="firstname" required>
@@ -118,13 +118,24 @@
                         <input type="text" path="phone" placeholder="Enter phone number" name="phone" id="phone" required>
 
                         <label for="email" path="email"><b>Email</b></label>
-                        <input type="text" path="email" placeholder="Enter Email" name="email" id="email" required>
-
+                        <input type="email" path="email" placeholder="abc@xyz.qwe" name="email" 
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" id="email" required>
+						
+						 <label for="confirmEmail" path="confirmEmail"><b>Email</b></label>
+                        <input type="email" path="confirmEmail" placeholder="Confirm Email" name="confirmEmail"
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" id="confirmEmail" required>
+						
                         <label for="password" path="password"><b>Password</b></label>
-                        <input type="password" path="password" placeholder="Enter Password" name="password" id="password" required>
+                        <input type="password" path="password" placeholder="Enter Password" name="password" 
+                        id="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+  						title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
+                        required>
 
                         <label for="confirmpassword" path="confirmpassword"><b>Confirm Password</b></label>
-                        <input type="password" path="confirmpassword" placeholder="Confirm Password" name="confirmpassword" id="confirmpassword" required>
+                        <input type="password" path="confirmpassword" placeholder="Confirm Password" name="confirmpassword"
+                         id="confirmpassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+  						title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
+                        required>
                        <!-- <label for="img"><b>Upload Signature</b></label>
                         <br>
                         <input type="file" id="img" name="img" accept="image/*">-->

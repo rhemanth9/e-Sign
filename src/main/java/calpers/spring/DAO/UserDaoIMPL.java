@@ -32,12 +32,16 @@ public class UserDaoIMPL implements UserDAO {
 	JdbcTemplate jdbcTemplate;
 	public int registerUser(User user) {
 		// TODO Auto-generated method stub
-		if(user.getPassword().equals(user.getConfirmpassword())) {
+		if(user.getPassword().equals(user.getConfirmpassword()) && user.getConfirmEmail().equalsIgnoreCase(user.getEmail())) {
 			System.out.println("invalid password");
-			String sql = "insert into user1 values(?,?,?,?,?,?,?,?)";
-
-			return jdbcTemplate.update(sql, new Object[] { user.getUsername(), user.getEmail(),user.getPassword(),
+			String sql = "insert into user1 values(?,MD5(?),?,?,?,?,?)";
+			try {
+			return jdbcTemplate.update(sql, new Object[] { user.getEmail(),user.getPassword(),
 					user.getFirstname(),user.getLastname(),user.getPhone(),user.getAddress(),user.getOrganization()});
+		}
+		catch(Exception e) {
+			return -1;
+			}
 		}
 		else
 			return 0;
@@ -55,10 +59,10 @@ public class UserDaoIMPL implements UserDAO {
 		// TODO Auto-generated method stub
 		String mobile=user.getPhone();
 		System.out.println(mobile);
-		String sql = "update user1 set firstName=?,lastName=?,address=?,mobile=?,organization=?,username=? where email=?";
+		String sql = "update user1 set firstName=?,lastName=?,address=?,mobile=?,organization=? where email=?";
 		int res=0;
 		try {
-			res = jdbcTemplate.update(sql, new Object[] { user.getFirstname(),user.getLastname(),user.getAddress(),user.getPhone(),user.getOrganization(),user.getUsername(), user.getEmail() });
+			res = jdbcTemplate.update(sql, new Object[] { user.getFirstname(),user.getLastname(),user.getAddress(),user.getPhone(),user.getOrganization(), user.getEmail() });
 			return 1;
 		}catch(Exception e) {
 			return 0;
@@ -68,12 +72,15 @@ public class UserDaoIMPL implements UserDAO {
 
 	public User validateUser(Login loginCredentials) {
 		// TODO Auto-generated method stub
-		String sql = "select * from user1 where email='" + loginCredentials.getEmail() + "' and password='" + loginCredentials.getPassword()
-		+ "'";
-
+		String sql = "select * from user1 where email='" + loginCredentials.getEmail() + "' and password=MD5('" + loginCredentials.getPassword()
+		+ "')";
+		try {
 		List<User> users = jdbcTemplate.query(sql, new UserMapper());
 
 		return users.size() > 0 ? users.get(0) : null;
+		}catch(Exception e) {
+			return null;
+		}
 		//return null;
 	}
 
@@ -129,7 +136,6 @@ class UserMapper implements RowMapper<User> {
 	public User mapRow(ResultSet rs, int arg1) throws SQLException {
 		User user = new User();
 
-		user.setUsername(rs.getString("username"));
 		user.setPassword(rs.getString("password"));
 		user.setFirstname(rs.getString("firstName"));
 		user.setLastname(rs.getString("lastName"));

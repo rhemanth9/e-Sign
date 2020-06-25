@@ -46,10 +46,6 @@
         class="form-control" name="lastname" minlength="5">
         </fieldset>
         <fieldset class="form-group">
-        <label>Username</label> <input type="text" value="${loginDetails.username}"
-        class="form-control" name="username" minlength="5">
-        </fieldset>
-        <fieldset class="form-group">
         <label>Email</label> <input type="text" value="${loginDetails.email}"
         class="form-control" name="email" minlength="5" readonly>
         </fieldset>

@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class User {
 
-		private String username;
+		private String confirmEmail;
 		private String email;
 		private String password;
 		private String confirmpassword;
@@ -16,12 +16,12 @@ public class User {
 		private String organization;
 		
 		
-		public String getUsername() {
-			    return username;
+		public String getConfirmEmail() {
+			    return confirmEmail;
 		}
-		public void setUsername(String username) {
+		public void setConfirmEmail(String confirmEmail) {
 			
-			    this.username = username;
+			    this.confirmEmail = confirmEmail;
 			  }
 		public String getEmail() {
 			return email;

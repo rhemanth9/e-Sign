@@ -98,12 +98,12 @@ pageEncoding="ISO-8859-1"%>
                         <form id="loginForm" modelAttribute="login" action="loginProcess" method="post">
                             <div class="form-group">
                                 <label>Your email</label>
-                                <input name="email" id="email" class="form-control" placeholder="Email" type="email">
+                                <input name="email" id="email" class="form-control" placeholder="Email" type="email" required>
                             </div> <!-- form-group// -->
                             <div class="form-group">
                                 <a class="float-right" href="forgotpassword.jsp">Forgot?</a>
                                 <label>Your password</label>
-                                <input name="password" id="password" class="form-control" placeholder="******" type="password">
+                                <input name="password" id="password" class="form-control" placeholder="******" type="password" required>
                             </div> <!-- form-group// -->
                             <!-- <div class="form-group">
                                 <div class="checkbox">

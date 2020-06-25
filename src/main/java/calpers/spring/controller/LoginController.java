@@ -58,11 +58,24 @@ public class LoginController {
 			mav = new ModelAndView("login");
 			mav.addObject("firstname", user.getFirstname());
 			mav.addObject("lastname", user.getLastname());
-			mav.addObject("username", user.getUsername());
+			//mav.addObject("username", user.getUsername());
 			mav.addObject("email", user.getEmail());
 			mav.addObject("phone", user.getPhone());
 			mav.addObject("address", user.getAddress());
 			mav.addObject("organization", user.getOrganization());
+			
+			Image image = userService.validateEsign(user.getEmail());
+			if(null!=image && null!=image.getEmail()) {
+				System.out.println(image.getEmail());
+				mav.addObject("image",image.getBase64Image());
+				mav.addObject("imageDetails", image.getBase64Image());
+				mav.addObject("message", image.getMessage());
+			}
+			else {
+				mav.addObject("notexists","Looks like your signature is not uploaded. Please upload or draw it!");
+				
+			}
+			mav.addObject("loginDetails", user);
 
 		}
 		else {
@@ -70,18 +83,8 @@ public class LoginController {
 			mav.addObject("message", "Username or Password is wrong!!");
 		}
 
-		Image image = userService.validateEsign(user.getEmail());
-		if(null!=image && null!=image.getEmail()) {
-			System.out.println(image.getEmail());
-			mav.addObject("image",image.getBase64Image());
-			mav.addObject("imageDetails", image.getBase64Image());
-			mav.addObject("message", image.getMessage());
-		}
-		else {
-			mav.addObject("notexists","Looks like your signature is not uploaded. Please upload or draw it!");
-			
-		}
-		mav.addObject("loginDetails", user);
+		
+		
 
 		return mav;
 	}
@@ -182,7 +185,7 @@ public class LoginController {
 				mav = new ModelAndView("welcome");
 				mav.addObject("firstname", user1.getFirstname());
 				mav.addObject("lastname", user1.getLastname());
-				mav.addObject("username", user1.getUsername());
+				//mav.addObject("username", user1.getUsername());
 				mav.addObject("email", user1.getEmail());
 				mav.addObject("phone", user1.getPhone());
 				mav.addObject("address", user1.getAddress());

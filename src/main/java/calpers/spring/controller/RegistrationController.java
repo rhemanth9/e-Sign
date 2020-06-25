@@ -25,14 +25,18 @@ public class RegistrationController {
   @ModelAttribute("user") User user) {
   int res=userService.register(user);
   System.out.println(res);
-  if(res!=0) {
+  if(res>0) {
 	  String success="Account successfully created. Please login!";
   return new ModelAndView("home", "Success", success);
   }
-  else {
+  else if(res==0) {
 	  String error="Enter the correct password";
 	  return new ModelAndView("register", "error", error);
   }
-	 
+  else {
+	  String error="User already exists";
+	  return new ModelAndView("register", "error", error);
+  }
+	  
   }
 }
