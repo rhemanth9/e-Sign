@@ -13,6 +13,7 @@ public interface UserService {
 	  User validateUser(Login login);
 	  int updateUser(User user);
 	  int insertImage(String email,MultipartFile photo);
+	  int insertDrawImage(String email,byte[] photoBytes);
 	  Image validateEsign(String email);
 	  
 }

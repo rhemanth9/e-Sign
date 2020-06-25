@@ -35,5 +35,10 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		return userDao.validateEsign(email);
 	}
+
+	public int insertDrawImage(String email, byte[] photoBytes) {
+		// TODO Auto-generated method stub
+		return userDao.insertDrawImage(email,photoBytes);
+	}
 	
 }

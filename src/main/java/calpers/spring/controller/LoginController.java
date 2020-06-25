@@ -1,15 +1,30 @@
 package calpers.spring.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +34,7 @@ import calpers.spring.model.Image;
 import calpers.spring.model.Login;
 import calpers.spring.model.User;
 import calpers.spring.service.UserService;
+
 @Controller
 @SessionAttributes({"loginDetails","imageDetails"})
 //@SessionAttributes("imageDetails")
@@ -84,7 +100,10 @@ public class LoginController {
 		//System.out.println(image.getImage());
 		int res=0;
 		ModelAndView mav = null;
-		res=userService.insertImage(email,image);
+		System.out.println(image);
+		
+			res=userService.insertImage(email,image);
+			
 		if(res!=0) {
 			mav = new ModelAndView("uploadsignature");
 			Image image1 = userService.validateEsign(email);
@@ -98,6 +117,43 @@ public class LoginController {
 		}
 
 
+	}
+	
+	@RequestMapping(value = "/insertDrawImage", method = RequestMethod.POST)
+	public ModelAndView saveCanvasImage(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("here");
+		String img;
+		String email="somisettyabhinay@gmail.com";
+		ModelAndView mav = new ModelAndView("drawsign");
+		int res=0;
+		try {
+			img = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+			 System.out.println(img);
+		     String[] data=img.split("-");
+			 //System.out.println(email);
+		     System.out.println(data[0]);
+		     System.out.println(data[1]);
+	         byte[] contentData = data[0].getBytes();
+	         byte[] decodedData = Base64.getDecoder().decode(contentData);
+	         res = userService.insertDrawImage(data[1], decodedData);
+	         if(res>0) {
+	        	 
+	 			Image image1 = userService.validateEsign(data[1]);
+	 			mav.addObject("imageDetails", image1.getBase64Image());
+	 			mav.addObject("success", "Image successfully inserted.!");
+	 			System.out.println("inside here");
+	         }
+	         else {
+	        	 //String errorDraw="Please try again :(";
+	        	 mav.addObject("error", "Please try again :(");
+				
+	         }
+	         
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return mav;
 	}
 
 	@Autowired
@@ -149,6 +205,8 @@ public class LoginController {
 		request.getSession().invalidate();
 		return "home";
 	}
+	
+	
 	/* @WebServlet("/logout")
   public class LogoutServlet extends HttpServlet {
 

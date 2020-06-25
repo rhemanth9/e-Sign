@@ -14,5 +14,6 @@ public interface UserDAO {
 	public int updateUserDetails(User user);
 	public int insertImage(String email,MultipartFile photo);
 	public Image validateEsign(String email);
+	int insertDrawImage(String email,byte[] photoBytes);
 	
 }

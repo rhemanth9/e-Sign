@@ -93,6 +93,19 @@ public class UserDaoIMPL implements UserDAO {
 
 		return result;
 	}
+	
+	public int insertDrawImage(String email,byte[] photoBytes) {
+		// TODO Auto-generated method stub
+		//File file=new File(image.getImage());
+		
+		String sql = "INSERT INTO ESIGN1 (email, IMAGE) VALUES (?, ?)";		
+		int result=0;
+		
+		result = jdbcTemplate.update(sql, new Object[] {email,photoBytes});
+		
+
+		return result;
+	}
 
 	public Image validateEsign(String email) {
 		// TODO Auto-generated method stub

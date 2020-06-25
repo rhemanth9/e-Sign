@@ -38,9 +38,7 @@
 	<ul class="navbar-nav">
 		<li><a href="fetchDetails" class="nav-link">Account</a></li>
 	</ul>
-	<ul class="navbar-nav">
-		<li><a href="drawsign.jsp" class="nav-link">Draw Sign</a></li>
-	</ul>
+	
 	<ul class="navbar-nav navbar-collapse justify-content-end">
 		<li><a href="logout" class="nav-link">Logout</a></li>
 	</ul>
@@ -50,11 +48,13 @@
 
 	<caption>
 		<h2>Welcome ${loginDetails.firstname}</h2>
-		<h2>${message}</h2>
-		<h2>${notexists}</h2>
-		<img src="data:image/png;base64,${imageDetails}" width="500" height="300"/><br>
+		<h2 style="font-style: italic; color: red;">${message}</h2>
+		<h2 style="font-style: italic; color: red;">${notexists}</h2>
+		<h3>${success}</h3>
+	<h3>${error}</h3>
+		
 	</caption>
-	
+		<img src="data:image/png;base64,${imageDetails}" width="500" height="300"/><br>
 	<!--
 	<form action="insertImage" modelAttribute="imageDetails" enctype="multipart/form-data" method="post" id="loginForm">
 
@@ -75,12 +75,5 @@
 	  <a href="uploadsignature.jsp">Upload Signature</a>-->
 	<button class="button button1" href="uploadsignature.jsp" onclick="window.location.href='/e-sign/uploadsignature.jsp'">Upload Signature</button>
 	<button class="button button2" href="drawsign.jsp" onclick="window.location.href='/e-sign/drawsign.jsp'">Draw Signature</button>
-
-	<table align="center">
-		<tr>
-			<td style="font-style: italic; color: red;">${message}</td>
-		</tr>
-	</table>
-
 </body>
 </html>

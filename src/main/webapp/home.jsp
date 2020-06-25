@@ -11,7 +11,7 @@ pageEncoding="ISO-8859-1"%>
 		<meta http-equiv="Expires" Content="0"/>
     <style>
         body {font-family: Arial, Helvetica, sans-serif;}
-        form {border: 3px solid #f1f1f1;}
+        
 
         input[type=text], input[type=password] {
             width: 100%;

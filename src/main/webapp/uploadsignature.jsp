@@ -69,17 +69,17 @@ cursor:pointer
 </style>
 <body>
 	<header> <nav class="navbar navbar-expand-md navbar-dark"
-		style="background-color: blue">
-
+		style="background-color: #008CBA">
+	<ul class="navbar-nav">
+		<li><a href="login.jsp" class="nav-link">Home</a></li>
+	</ul>
 	<ul class="navbar-nav">
 		<li><a href="fetchDetails" class="nav-link">Account</a></li>
 	</ul>
 	<ul class="navbar-nav">
 		<li><a href="drawsign.jsp" class="nav-link">Draw Sign</a></li>
 	</ul>
-	<ul class="navbar-nav">
-		<li><a href="login.jsp" class="nav-link">Home</a></li>
-	</ul>
+	
 	<ul class="navbar-nav navbar-collapse justify-content-end">
 		<li><a href="logout" class="nav-link">Logout</a></li>
 	</ul>
@@ -104,7 +104,8 @@ cursor:pointer
 				class="form-control" name="email" minlength="5" readonly>
         <p style="padding-left: 16px; padding-right: 16px; font-size:22px" >
         Please chose a picture and click on submit to save the picture</p>		
-	<input class="button button1" type="file" name="image" id="file" > 	<br>
+	<input class="button button1" type="file" name="image" id="file"
+	 accept="image/*" data-type='image' required/> 	<br>
 	<input class="button button2" type="submit" value="Submit">
 	 
 	<!-- <input type="file" name="file1" id="file1" class="inputfile" />

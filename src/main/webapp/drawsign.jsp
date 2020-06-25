@@ -104,30 +104,6 @@
 		var image_data = canvas.toDataURL("image/png");
 		document.getElementById('save_remote_data').value = image_data; // Place the image data in to the form
 		document.forms["save_remote"].submit(); // Submit the form to the server
-		
-		// jsp
-		function saveCanvasImage(){
-		    var imageData = myCanvas.toDataUrl();
-
-		    $.ajax({
-		        url:'/controller/path/saveCanvasImage',
-		        data:{imageBase64: image_data},
-		        type: 'post',
-		        dataType: 'json',
-		        timeout: 10000,
-		        async: false,
-		        error: function(){
-		            console.log("WOOPS");
-		        },
-		        success: function(res){
-		            if(res.ret==0){
-		                console.log("SUCCESS");
-		            }else{
-		                console.log("FAIL : " + res.msg);
-		            }
-		        }
-		    });
-		}
 	}
 
 	// Keep track of the mouse button being pressed and draw a dot at current location
@@ -250,6 +226,46 @@
 
 		}
 	}
+	// jsp
+	function saveCanvasImage(){
+		
+		
+		var canvasServer = document.getElementById("sketchpad");
+		var email = document.getElementById("email").value;
+	    var context = canvasServer.getContext("2d");  
+	    
+	    var imageDataURL = canvasServer.toDataURL('image/png');
+	   
+	    formdata = imageDataURL.replace(/^data:image\/(png|jpg);base64,/,"");
+	   
+	    var ajax = new XMLHttpRequest();
+	       
+	    ajax.open("POST","insertDrawImage",false);
+	    
+	    //ajax.setRequestHeader("Content-Type", "application/upload");
+	    ajax.send(formdata+"-"+email);
+		
+	   /* var imageData = myCanvas.toDataUrl();
+
+	    $.ajax({
+	        url:'/controller/path/saveCanvasImage',
+	        data:{imageBase64: imageData},
+	        type: 'post',
+	        dataType: 'json',
+	        timeout: 10000,
+	        async: false,
+	        error: function(){
+	            console.log("WOOPS");
+	        },
+	        success: function(res){
+	            if(res.ret==0){
+	                console.log("SUCCESS");
+	            }else{
+	                console.log("FAIL : " + res.msg);
+	            }
+	        }
+	    });*/
+	}
 </script>
 
 <style>
@@ -265,17 +281,19 @@
 }
 
 .leftside {
-	float: left;
 	width: 220px;
-	height: 285px;
-	background-color: #def;
+	/*height: 285px;
+	background-color: #def;*/
 	padding: 10px;
 	border-radius: 4px;
+	margin-left: 10px;
+	margin-top: 20px;
 }
 
 .rightside {
 	float: left;
 	margin-left: 10px;
+	margin-top: 30px;
 }
 
 #sketchpad {
@@ -288,14 +306,14 @@
 	/* Necessary for correct mouse co-ords in Firefox */
 }
 
-#clearbutton {
+/*#clearbutton {
 	font-size: 15px;
 	padding: 10px;
 	-webkit-appearance: none;
 	background: #eee;
 	border: 1px solid #888;
 }
-
+*/
 #save_remote {
 	float: left;
 	margin-left: 5px;
@@ -314,128 +332,94 @@
 	border: 1px solid #000;
 	margin: 15px;
 }
+
+.button {
+	border: none;
+	color: white;
+	padding: 15px 32px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+}
+
+.button1 {
+	background-color: #4CAF50;
+} /* Green */
+.button2 {
+	background-color: #008CBA;
+	float: left;
+	margin-left: 10px;
+	margin-top: 30px;
+} /* Blue */
 </style>
 </head>
 
-<!-- <script>
-        $(document).on('ready', function() {
-        if ($('.js-signature').length) {
-        $('.js-signature').jqSignature();
-        }
-        });
+<header> <nav class="navbar navbar-expand-md navbar-dark"
+	style="background-color: #008CBA">
+<ul class="navbar-nav">
+	<li><a href="login.jsp" class="nav-link"><strong>Home</strong></a></li>
+</ul>
+<ul class="navbar-nav">
+		<li><a href="fetchDetails" class="nav-link">Account</a></li>
+	</ul>
+<ul class="navbar-nav">
+		<li><a href="uploadsignature.jsp" class="nav-link">Upload Sign</a></li>
+	</ul>
 
-        /*
-        * Demo
-        */
+<ul class="navbar-nav navbar-collapse justify-content-end">
+	<li><a href="logout" class="nav-link">Logout</a></li>
+</ul>
+</nav> </header>
 
-        function clearCanvas() {
-        $('#signature')
-        .html(
-        '<p><em>Your signature will appear here when you click "Save Signature"</em></p>');
-        $('.js-signature').eq(1).jqSignature('clearCanvas');
-        $('#saveBtn').attr('disabled', true);
-        }
+<caption>
+	<br> <br> <br>
+	<h4>Welcome ${loginDetails.firstname}..! Please draw the signature
+		and submit.!</h4>
+		<h5> ${success} </h5>
+		<h5> ${error} </h5>
+</caption>
 
-        function saveSignature() {
-        $('#signature').empty();
-        var dataUrl = $('.js-signature').eq(1).jqSignature('getDataURL');
-        var img = $('<img>').attr('src', dataUrl);
-        $('#signature').append($('<p>').text("Here's your signature:"));
-        $('#signature').append(img);
-        }
-
-        $('.js-signature').eq(1).on('jq.signature.changed', function() {
-        $('#saveBtn').attr('disabled', false);
-        });
-        </script>
-        <style>
-        /* Some CSS styling */
-        #sketchpadapp {
-        /* Prevent nearby text being highlighted when accidentally dragging mouse outside confines of the canvas */
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        }
-
-        .leftside {
-        float: left;
-        width: 220px;
-        height: 285px;
-        background-color: #def;
-        padding: 10px;
-        border-radius: 4px;
-        }
-
-        .rightside {
-        float: left;
-        margin-left: 10px;
-        }
-
-        #sketchpad {
-        float: left;
-        height: 200px;
-        width: 900px;
-        border: 2px solid #888;
-        border-radius: 4px;
-        position: relative;
-        /* Necessary for correct mouse co-ords in Firefox */
-        }
-
-        #clearbutton {
-        font-size: 15px;
-        padding: 10px;
-        -webkit-appearance: none;
-        background: #eee;
-        border: 1px solid #888;
-        }
-        </style>
-        </head>-->
-        <header> <nav class="navbar navbar-expand-md navbar-dark"
-        style="background-color: tomato">
-        <ul class="navbar-nav">
-        <li><a href="login.jsp" class="nav-link">Home</a></li>
-        </ul>
-
-        <ul class="navbar-nav navbar-collapse justify-content-end">
-        <li><a href="logout"
-        class="nav-link">Logout</a></li>
-        </ul>
-        </nav> </header>
-	
-	<body onload="init()">
+<body onload="init()">
 
 	<div id="sketchpadapp">
-		<div class="leftside">
-			<br /> <input type="submit" value="Clear Sketchpad" id="clearbutton"
-				onclick="clearCanvas(canvas,ctx);"> <input type="submit"
-				value="View Image" id="save_button"
-				onclick="viewImageLocal(canvas); return false;">
-			<form name='save_remote' id='save_remote' method='POST'
-				action='/insertImage' 
-				onsubmit='saveImageRemote(canvas); return false;'>
-				<input type="hidden" value="${loginDetails.email}"
-        class="form-control" name="email" minlength="5" readonly>
-				<!-- <input type="submit" value="Save Image" id="save_button">  -->
-				<input type="submit" value="Submit">
-				 <input	type="hidden" name="save_remote_data" id="save_remote_data">
-			</form>
-			<div class="save_box">
-				<center>
-					<!-- Our Sketchpad thumbnail -->
-					<img id="image_display">
-				</center>
-			</div>
-
-		</div>
-
 		<div class="rightside">
 			<canvas id="sketchpad" height="200" width="700"> </canvas>
 		</div>
 	</div>
+	<div class="rightside">
+		<br> <input class="button button1" type="submit"
+			value="Clear Sketchpad" id="clearbutton"
+			onclick="clearCanvas(canvas,ctx);">
+	</div>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<div>
+		<input type="hidden" value="${loginDetails.email}"
+			class="form-control" id="email" name="email" minlength="5" readonly>
+		<form name='save_remote' id='save_remote' method='POST'
+			onsubmit='saveCanvasImage(); return false;'>
+			<input type="hidden" value="${loginDetails.email}"
+				class="form-control" name="email" minlength="5" readonly>
+			<!-- <input type="submit" value="Save Image" id="save_button">  -->
+			<input type="submit" value="Submit" class="button button2"
+				onclick="saveCanvasImage"> <input type="hidden"
+				name="save_remote_data" id="save_remote_data">
+		</form>
+	</div>
+	<div class="save_box">
+		<center>
+			<!-- Our Sketchpad thumbnail -->
+			<img id="image_display">
+		</center>
+	</div>
+	</div>
 
-
+	
 </body>
 </html>

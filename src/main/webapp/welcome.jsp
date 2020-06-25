@@ -16,7 +16,7 @@
         </head>
         <body>
         <header> <nav class="navbar navbar-expand-md navbar-dark"
-        style="background-color: tomato">
+        style="background-color: #008CBA">
         <ul class="navbar-nav">
         <li><a href="login.jsp" class="nav-link">Home</a></li>
         </ul>
