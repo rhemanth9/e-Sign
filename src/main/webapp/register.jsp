@@ -1,6 +1,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+	<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"><script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -41,7 +42,8 @@
 
         .imgcontainer {
             text-align: center;
-            margin: 24px 0 12px 0;
+           margin: 24px 0 12px 0;
+            
         }
 
         img.avatar {
@@ -69,7 +71,7 @@
             }
         }
         body {
-            background-image: url('bg-yosemite.jpg');
+            /*background-image: url('bg-yosemite.jpg');*/
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-size: cover;
@@ -87,16 +89,16 @@
         }
     </style>
 </head>
-<body>
+<body  background="/e-sign/res/img/bg-yosemite.jpg">
 
 <div class="imgcontainer">
-    <img src="../images/logo.png"> 
+    <img src="<c:url value="/res/img/logo.png"/>" alt="Avatar" class="avatar"/> 
 </div>
-<div class="container" style="width:800px; height: 800px;">
+<div class="container" style="width:800px; height: 800px; ">
 <form id="regForm" modelAttribute="user" action="registerProcess" method="post">
    <div class="row" >
-        <div class="col-sm-auto" style="align-content: center;width: 100%">
-            <div class="card" style="align-content: center; width: 100%">
+        <div class="col-sm-auto" style="width: 100%">
+            <div class="card" style="width: 100%">
                 <article class="card-body">
                     <div class="container"  >
                     	<h6>${error}</h6>
@@ -105,19 +107,13 @@
                        <!-- <label path="username">Username</label>
                         <input path="username" type="text" placeholder="Enter User Name" name="username" id="username" required> --> 
                         
-                        <label for="firstname" path="username"><b>First Name</b></label>
-                        <input path="username" type="text" placeholder="Enter First Name" name="firstname" id="firstname" required>
+                        <label for="firstname" path="firstname"><b>First Name</b></label>
+                        <input path="firstname" type="text" placeholder="Enter First Name" name="firstname" id="firstname" required>
 
                         <label for="lastname" path="lastname"><b>Last Name</b></label>
                         <input type="text" path="lastname" placeholder="Enter Last Name" name="lastname" id="lastname" required>
 
-                       <label for="address" path="address"><b>Address</b></label>
-                        <input type="text" path="address" placeholder="Enter Address" name="address" id="address" required>
-                        
-                        <label for="phone" path="phone"><b>Contact</b></label>
-                        <input type="text" path="phone" placeholder="Enter phone number" name="phone" id="phone" required>
-
-                        <label for="email" path="email"><b>Email</b></label>
+                       <label for="email" path="email"><b>Email</b></label>
                         <input type="email" path="email" placeholder="abc@xyz.qwe" name="email" 
                         pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" id="email" required>
 						
@@ -136,6 +132,14 @@
                          id="confirmpassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
   						title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
                         required>
+                       
+                       <label for="address" path="address"><b>Address</b></label>
+                        <input type="text" path="address" placeholder="Enter Address" name="address" id="address" required>
+                        
+                        <label for="phone" path="phone"><b>Contact</b></label>
+                        <input type="text" path="phone" placeholder="Enter phone number" name="phone" id="phone" required>
+
+                        
                        <!-- <label for="img"><b>Upload Signature</b></label>
                         <br>
                         <input type="file" id="img" name="img" accept="image/*">-->

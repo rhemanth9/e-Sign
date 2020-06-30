@@ -3,35 +3,46 @@ package calpers.spring.controller;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import org.springframework.mock.web.MockMultipartFile;
 
-import javax.imageio.ImageIO;
+//import javax.imageio.ImageIO;
+//import javax.security.auth.callback.ConfirmationCallback;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
+//import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
+//import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
+//import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttribute;
+//import org.springframework.web.bind.annotation.ResponseBody;
+//import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-
 import calpers.spring.model.Image;
 import calpers.spring.model.Login;
+import calpers.spring.model.PasswordResetToken;
 import calpers.spring.model.User;
 import calpers.spring.service.UserService;
 
@@ -41,6 +52,9 @@ import calpers.spring.service.UserService;
 public class LoginController {
 	@Autowired
 	UserService userService;
+	@Autowired
+	private JavaMailSender mailSender;
+
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView showLogin(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView("login");
@@ -63,7 +77,7 @@ public class LoginController {
 			mav.addObject("phone", user.getPhone());
 			mav.addObject("address", user.getAddress());
 			mav.addObject("organization", user.getOrganization());
-			
+
 			Image image = userService.validateEsign(user.getEmail());
 			if(null!=image && null!=image.getEmail()) {
 				System.out.println(image.getEmail());
@@ -73,7 +87,7 @@ public class LoginController {
 			}
 			else {
 				mav.addObject("notexists","Looks like your signature is not uploaded. Please upload or draw it!");
-				
+
 			}
 			mav.addObject("loginDetails", user);
 
@@ -82,10 +96,6 @@ public class LoginController {
 			mav = new ModelAndView("home");
 			mav.addObject("message", "Username or Password is wrong!!");
 		}
-
-		
-		
-
 		return mav;
 	}
 
@@ -97,16 +107,38 @@ public class LoginController {
 		return "welcome";
 	}
 
+		
 	@RequestMapping(value = "/insertImage", method = RequestMethod.POST)
-	public ModelAndView insertImage(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("email") String email,@RequestParam("image") MultipartFile image) {
+	public ModelAndView insertUploadImage(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("email") String email,@RequestParam("image") MultipartFile image) throws IOException, InterruptedException {
 		//System.out.println(image.getImage());
 		int res=0;
 		ModelAndView mav = null;
 		System.out.println(image);
 		
-			res=userService.insertImage(email,image);
-			
+		File dest = new File("C:\\CSC 230\\e-sign_web\\e-sign\\temp_images\\temp.jpg");
+	    //check destination exists, if not create it
+	    if(!dest.exists())
+	    {
+	       dest.mkdir();
+	    }
+	    try { 
+	       image.transferTo(dest); 
+	    }
+	    catch (IllegalStateException e) 
+	    { 
+	        e.printStackTrace();
+	    }
+	    Process p = Runtime.getRuntime().exec("C:\\Users\\somis\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_qbz5n2kfra8p0\\python.exe \"C:\\CSC 230\\e-sign_web\\e-sign\\process_sign.py\"");
+	    //res = 1;
+	    Thread.sleep(3000);
+	    
+	    File res_file = new File("C:\\CSC 230\\e-sign_web\\e-sign\\temp_images\\temp_result.jpg");
+	    FileInputStream res_input = new FileInputStream(res_file);
+	    MultipartFile multipartFile = new MockMultipartFile("res_file",
+	    		res_file.getName(), "image/jpg", IOUtils.toByteArray(res_input));
+	    res=userService.insertImage(email, multipartFile);
+	    
 		if(res!=0) {
 			mav = new ModelAndView("uploadsignature");
 			Image image1 = userService.validateEsign(email);
@@ -122,36 +154,36 @@ public class LoginController {
 
 	}
 	
+
 	@RequestMapping(value = "/insertDrawImage", method = RequestMethod.POST)
 	public ModelAndView saveCanvasImage(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("here");
 		String img;
-		String email="somisettyabhinay@gmail.com";
 		ModelAndView mav = new ModelAndView("drawsign");
 		int res=0;
 		try {
 			img = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-			 System.out.println(img);
-		     String[] data=img.split("-");
-			 //System.out.println(email);
-		     System.out.println(data[0]);
-		     System.out.println(data[1]);
-	         byte[] contentData = data[0].getBytes();
-	         byte[] decodedData = Base64.getDecoder().decode(contentData);
-	         res = userService.insertDrawImage(data[1], decodedData);
-	         if(res>0) {
-	        	 
-	 			Image image1 = userService.validateEsign(data[1]);
-	 			mav.addObject("imageDetails", image1.getBase64Image());
-	 			mav.addObject("success", "Image successfully inserted.!");
-	 			System.out.println("inside here");
-	         }
-	         else {
-	        	 //String errorDraw="Please try again :(";
-	        	 mav.addObject("error", "Please try again :(");
-				
-	         }
-	         
+			System.out.println(img);
+			String[] data=img.split("-");
+			//System.out.println(email);
+			System.out.println(data[0]);
+			System.out.println(data[1]);
+			byte[] contentData = data[0].getBytes();
+			byte[] decodedData = Base64.getDecoder().decode(contentData);
+			res = userService.insertDrawImage(data[1], decodedData);
+			if(res>0) {
+
+				Image image1 = userService.validateEsign(data[1]);
+				mav.addObject("imageDetails", image1.getBase64Image());
+				mav.addObject("success", "Image successfully inserted.!");
+				System.out.println("inside here");
+			}
+			else {
+				//String errorDraw="Please try again :(";
+				mav.addObject("error", "Please try again :(");
+
+			}
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -180,7 +212,7 @@ public class LoginController {
 		System.out.println(res);
 		if(!(res==0)) {
 			ModelAndView mav = null;
-			User user1 = userService.validateUser(login);
+			User user1 = userService.validateUser1(login);
 			if (null != user && null !=user.getFirstname()) {
 				mav = new ModelAndView("welcome");
 				mav.addObject("firstname", user1.getFirstname());
@@ -201,6 +233,99 @@ public class LoginController {
 		}
 	}
 
+	@RequestMapping(value = "/forgotPassword", method = RequestMethod.POST)
+	public ModelAndView forgotPassword(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("email") String email) {
+		ModelAndView mav = new ModelAndView("forgotpassword");
+		User user1 = userService.findUserByEmail(email);
+		String subject="password reset";
+		String message=null;
+		if (null != user1 && null !=user1.getFirstname()) {
+
+			//PasswordResetToken confirmationToken = new PasswordResetToken();
+
+			mav.addObject("success", "If user is registered, an e-mail will be sent with reset password instructions ");
+			SimpleMailMessage msg = new SimpleMailMessage();
+			String randomtoken = UUID.randomUUID().toString();
+
+			int res=userService.insertToken(email,randomtoken);
+
+			message="http://localhost:8080/e-sign/confirmPassword?token="+randomtoken;
+			// userService.createPasswordResetTokenForUser(email, token);
+			msg.setTo(email);
+			msg.setSubject(subject);
+			msg.setText(message);
+
+			// sends the e-mail
+			mailSender.send(msg);
+
+		}
+		else {
+			mav.addObject("error", "If you user is registered, an e-mail will be sent with reset password instructions");
+		}
+
+		return mav;
+	}
+
+	@RequestMapping(value = {"/confirmPassword"}, method = RequestMethod.GET)
+	public ModelAndView validateResetToken(HttpServletRequest request, HttpServletResponse response, 
+			@RequestParam("token") String token) {
+		ModelAndView mav = null;
+		PasswordResetToken result = userService.validatePasswordResetToken(token);
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+		LocalDateTime now = LocalDateTime.now();
+		String date=result.getExpDate();
+//&& date.compareTo(dtf.format(now))>0
+		if(result != null && date.compareTo(dtf.format(now))>0 && result.getEnable()==0) {
+			mav = new ModelAndView("resetpassword");
+			User user = userService.findUserByEmail(result.getEmail());
+			mav.addObject("email", user.getEmail());
+			mav.addObject("token", token);
+			mav.addObject("logindetails",user);
+			return mav;
+		} else {
+
+			return new ModelAndView("forgotpassword","errorexp","Token Expired");
+		}
+	}
+
+	@RequestMapping(value = {"/resetPassword"}, method = RequestMethod.POST)
+	public ModelAndView resetPassword(HttpServletRequest request, HttpServletResponse response,
+			@ModelAttribute("userDetails") User user,@RequestParam("email") String email,
+			@RequestParam("token") String token) {
+		System.out.println("inside resetpassword"+email);
+		System.out.println("inside resetpassword"+user.getEmail());
+		System.out.println("inside resetpassword"+user.getPassword());
+		ModelAndView mav = null;
+		if(user.getPassword().equals(user.getConfirmpassword())) {
+		User user1 = userService.findUserByEmail(user.getEmail());
+		
+		
+		if(user1 == null) {
+			mav = new ModelAndView("home");
+			mav.addObject("resfail","User doesnot exists. PLease try again");
+		}
+		else {
+			
+				int res = userService.updatePassword(user.getEmail(),user.getPassword());
+				if(res>0) {
+					mav = new ModelAndView("home");
+					mav.addObject("ressuccess","Yor password has been reset. Please login");
+					userService.deactivateToken(email,token);
+				}
+				
+			}
+		}
+		else {
+			mav.addObject("email", email);
+			mav.addObject("token", token);
+			//.addObject("logindetails",user1);
+				mav = new ModelAndView("resetpassword");
+				mav.addObject("error","both the passwords should match");
+			}
+		
+		return mav;
+	}
 
 
 	@RequestMapping(value = {"/logout"}, method = RequestMethod.GET)
@@ -208,8 +333,8 @@ public class LoginController {
 		request.getSession().invalidate();
 		return "home";
 	}
-	
-	
+
+
 	/* @WebServlet("/logout")
   public class LogoutServlet extends HttpServlet {
 

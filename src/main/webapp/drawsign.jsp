@@ -17,6 +17,10 @@
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="jq-signature.js"></script>
 <script type="text/javascript" src="../JavaScript/signature.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script type="text/javascript">
 	// Variables for referencing the canvas and 2dcanvas context
 	var canvas, ctx;
@@ -226,6 +230,13 @@
 
 		}
 	}
+	
+	// returns true if all color channels in each pixel are 0 (or "blank")
+	function isCanvasBlank(canvas) {
+		  return !canvas.getContext('2d')
+		    .getImageData(0, 0, canvas.width, canvas.height).data
+		    .some(channel => channel !== 0);
+		}
 	// jsp
 	function saveCanvasImage(){
 		
@@ -239,12 +250,33 @@
 	    formdata = imageDataURL.replace(/^data:image\/(png|jpg);base64,/,"");
 	   
 	    var ajax = new XMLHttpRequest();
-	       
-	    ajax.open("POST","insertDrawImage",false);
+	      
+	    
+	    ajax.onloadend = function() {
+	        if (xhr.status == 200) {
+	          console.log("success");
+	        } else {
+	          console.log("error " + this.status);
+	        }
+	      };
+	    
+	      if (!isCanvasBlank(canvas)){
+	    	  
+	    	  ajax.open("POST","insertDrawImage",false); 
+	    	  alert("Signature is uploaded");
+	      }else{
+	    	  alert("Please draw the image");
+	      }
+	    
 	    
 	    //ajax.setRequestHeader("Content-Type", "application/upload");
 	    ajax.send(formdata+"-"+email);
-		
+	    
+	    
+	    if (canvas.getContext)
+			ctx = canvas.getContext('2d');
+	    clearCanvas(canvasServer,ctx)
+	    
 	   /* var imageData = myCanvas.toDataUrl();
 
 	    $.ajax({
@@ -270,6 +302,19 @@
 
 <style>
 /* Some CSS styling */
+.fa{
+background-color: #008CBA;
+font-size: 20px;
+color: white;
+
+}
+
+.fas{
+background-color: #008CBA;
+font-size: 20px;
+color: white;
+
+}
 #sketchpadapp {
 	/* Prevent nearby text being highlighted when accidentally dragging mouse outside confines of the canvas */
 	-webkit-touch-callout: none;
@@ -294,15 +339,18 @@
 	float: left;
 	margin-left: 10px;
 	margin-top: 30px;
+	text-align : center;
 }
 
 #sketchpad {
+	
 	float: left;
 	height: 200px;
 	width: 700px;
 	border: 2px solid #888;
 	border-radius: 4px;
 	position: relative;
+	text-align:center;
 	/* Necessary for correct mouse co-ords in Firefox */
 }
 
@@ -321,16 +369,15 @@
 
 .save_box {
 	/*border: 1px solid #bbb;*/
-	text-align: left;
+	text-align: center;
 	border-radius: 4px;
 	padding: 5px;
 	clear: both;
 }
 
 #image_display {
-	
-	width: 150px;
-	height: 80px;
+	width: 180px;
+	height: 100px;
 	border: 1px solid #000;
 	margin: 15px;
 }
@@ -358,32 +405,35 @@
 } /* Blue */
 </style>
 </head>
-
-<header> <nav class="navbar navbar-expand-md navbar-dark"
-	style="background-color: #008CBA">
-<ul class="navbar-nav">
-	<li><a href="login.jsp" class="nav-link"><strong>Home</strong></a></li>
-</ul>
-<ul class="navbar-nav">
-		<li><a href="fetchDetails" class="nav-link">Account</a></li>
+<header>
+<nav class="navbar navbar-expand-md navbar-dark"
+		style="background-color: #008CBA; height:70px;" >
+	<ul class="navbar-nav">
+	
+	<li ><a href="login.jsp" class="fa fa-home" class="nav-link"> Home  </a></li>
+	
+		
 	</ul>
-<ul class="navbar-nav">
-		<li><a href="uploadsignature.jsp" class="nav-link">Upload Sign</a></li>
+	<ul class="navbar-nav">
+		<li style="padding-left:7px;"> <a href="fetchDetails" class="fas fa-user" class="nav-link"> Account  </a></li>
+	</ul>
+	<ul class="navbar-nav">
+		<li style="padding-left:7px;"><a href="uploadsignature.jsp"  class="fas fa-upload" class="nav-link"> Upload Sign </a></li>
 	</ul>
 
-<ul class="navbar-nav navbar-collapse justify-content-end">
-	<li><a href="logout" class="nav-link">Logout</a></li>
-</ul>
-</nav> </header>
-
+	<ul class="navbar-nav navbar-collapse justify-content-end">
+		<li style="padding-left:7px;"><a href="logout" class="fas fa-power-off" class="nav-link"> Logout</a></li>
+	</ul>
+	</nav> </header>
+<div id="captioncont"  style="text-align: center;">
 <caption>
 	<br> <br> <br>
 	<h4>Welcome ${loginDetails.firstname}..! Please draw the signature
 		and submit.!</h4>
-		<h5> ${success} </h5>
-		<h5> ${error} </h5>
+	<h5>${success}</h5>
+	<h5>${error}</h5>
 </caption>
-
+</div>
 <body onload="init()">
 
 	<div id="sketchpadapp">
@@ -396,6 +446,7 @@
 			value="Clear" id="clearbutton"
 			onclick="clearCanvas(canvas,ctx);">
 	</div>
+	<br>
 	<br>
 	<br>
 	<br>

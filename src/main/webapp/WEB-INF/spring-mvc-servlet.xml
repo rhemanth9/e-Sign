@@ -14,6 +14,8 @@ xsi:schemaLocation=" http://www.springframework.org/schema/beans
     <import resource="classpath:calpers/config/user-beans.xml" />
     <context:component-scan base-package="calpers.spring" />
     <context:annotation-config />
+    <mvc:annotation-driven />
+    <mvc:resources location="/res/" mapping="/res/**"></mvc:resources> 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/" />
         <property name="suffix" value=".jsp" />

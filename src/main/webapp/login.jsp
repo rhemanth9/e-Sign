@@ -6,24 +6,50 @@
 <head>
 <style>
 .button {
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
+	border: none;
+	color: white;
+	padding: 15px 32px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
 }
 
-.button1 {background-color: #4CAF50;} /* Green */
-.button2 {background-color: #008CBA;} /* Blue */
+.fa {
+	background-color: #008CBA;
+	font-size: 20px;
+	color: white;
+}
+
+.fas {
+	background-color: #008CBA;
+	font-size: 20px;
+	color: white;
+}
+
+.button1 {
+	background-color: #4CAF50;
+} /* Green */
+.button2 {
+	background-color: #008CBA;
+} /* Blue */
+footer {
+  text-align: center;
+  
+  background-color: DarkSalmon;
+  color: white;
+}
 </style>
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
 	crossorigin="anonymous">
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta http-equiv="Cache-Control"
 	Content="no-cache,no-store,must-revalidate" />
@@ -33,28 +59,38 @@
 </head>
 <body>
 	<header> <nav class="navbar navbar-expand-md navbar-dark"
-		style="background-color: #008CBA">
+		style="background-color: #008CBA; height:70px;">
 
 	<ul class="navbar-nav">
-		<li><a href="fetchDetails" class="nav-link">Account</a></li>
+		<li style="padding-left: 7px;"><a href="fetchDetails"
+			class="fas fa-user" class="nav-link"> Account</a></li>
 	</ul>
-	
+
 	<ul class="navbar-nav navbar-collapse justify-content-end">
-		<li><a href="logout" class="nav-link">Logout</a></li>
+		<li style="padding-left: 7px;"><a href="logout"
+			class="fas fa-power-off" class="nav-link"> Logout</a></li>
 	</ul>
 	</nav> </header>
 
 
+	<div id="captioncon" style="text-align: center;">
+		<caption>
+			<h2 style="text-align: center;">Welcome
+				${loginDetails.firstname}</h2>
+			<h2 style="font-style: italic; color: red;">${message}</h2>
+			<h2 style="font-style: italic; color: red;">${notexists}</h2>
+			<h3>${success}</h3>
+			<h3>${error}</h3>
 
-	<caption>
-		<h2>Welcome ${loginDetails.firstname}</h2>
-		<h2 style="font-style: italic; color: red;">${message}</h2>
-		<h2 style="font-style: italic; color: red;">${notexists}</h2>
-		<h3>${success}</h3>
-	<h3>${error}</h3>
-		
-	</caption>
-		<img src="data:image/png;base64,${imageDetails}" width="500" height="300"/><br>
+		</caption>
+	</div>
+	
+	<div id="imgcont" style="text-align: center;">
+		<img src="data:image/png;base64,${imageDetails}" width="400"
+			height="200" />
+	</div>
+
+	<br>
 	<!--
 	<form action="insertImage" modelAttribute="imageDetails" enctype="multipart/form-data" method="post" id="loginForm">
 
@@ -73,8 +109,25 @@
 	</form>
 	
 	  <a href="uploadsignature.jsp">Upload Signature</a>-->
-	<button class="button button1" href="uploadsignature.jsp" onclick="window.location.href='/e-sign/uploadsignature.jsp'">Upload Signature</button>
-	<button class="button button2" href="drawsign.jsp" onclick="window.location.href='/e-sign/drawsign.jsp'">Draw Signature</button>
-   <!--   <iframe src ="uploadsignature.jsp" width="100%" height="1100" frameborder="0px"></iframe> -->
+	<div id="btncon" style="text-align: center;">
+		<button class="button button1" href="uploadsignature.jsp"
+			onclick="window.location.href='/e-sign/uploadsignature.jsp'">Upload
+			Signature</button>
+		<button class="button button2" href="drawsign.jsp"
+			onclick="window.location.href='/e-sign/drawsign.jsp'">Draw
+			Signature</button>
+
+	</div>
+	
+	<div id="footcon" style="padding-top:85px">
+	<footer>
+  <p>Contact<br>
+   Team PHANTOMS<br>
+   Department of CSc<br>
+   California State University, Sacramento<br>
+  </p>
+</footer>
+	</div>
+	<!--   <iframe src ="uploadsignature.jsp" width="100%" height="1100" frameborder="0px"></iframe> -->
 </body>
 </html>
