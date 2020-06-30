@@ -109,19 +109,25 @@ public class LoginController {
 
 		
 	@RequestMapping(value = "/insertImage", method = RequestMethod.POST)
-	public ModelAndView insertUploadImage(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("email") String email,@RequestParam("image") MultipartFile image) throws IOException, InterruptedException {
+	public ModelAndView insertUploadImage(HttpServletRequest request, HttpServletResponse response) throws IOException, InterruptedException {
 		//System.out.println(image.getImage());
 		int res=0;
 		ModelAndView mav = null;
-		System.out.println(image);
+		String imageString=request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+		String[] data=imageString.split("-");
+		System.out.println("base64 string:"+imageString);
+		String email=data[1];
+		byte[] contentData = data[0].getBytes();
+		byte[] decodedData = Base64.getDecoder().decode(contentData);
 		
-		File dest = new File("C:\\CSC 230\\e-sign_web\\e-sign\\temp_images\\temp.jpg");
+		MultipartFile image = new MockMultipartFile("image/jpeg", decodedData);
+		
+		File dest = new File("C:\\CSC 230\\e-sign_web\\e-sign\\temp_images\\temp.jpeg");
 	    //check destination exists, if not create it
-	    if(!dest.exists())
+	    /*if(!dest.exists())
 	    {
 	       dest.mkdir();
-	    }
+	    }*/
 	    try { 
 	       image.transferTo(dest); 
 	    }
@@ -133,7 +139,7 @@ public class LoginController {
 	    //res = 1;
 	    Thread.sleep(3000);
 	    
-	    File res_file = new File("C:\\CSC 230\\e-sign_web\\e-sign\\temp_images\\temp_result.jpg");
+	    File res_file = new File("C:\\CSC 230\\e-sign_web\\e-sign\\temp_images\\temp_result.jpeg");
 	    FileInputStream res_input = new FileInputStream(res_file);
 	    MultipartFile multipartFile = new MockMultipartFile("res_file",
 	    		res_file.getName(), "image/jpg", IOUtils.toByteArray(res_input));
