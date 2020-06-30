@@ -202,7 +202,7 @@
         <div class="box">
             <div class="options hide">
                 <label> Width</label>
-                <input type="number" class="img-w" value="300" min="100" max="1200" />
+                <input type="number" class="img-w" value="600" min="600" max="1200" />
             </div>
             <!-- save btn -->
             <button class="button save hide">Save</button>
