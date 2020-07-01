@@ -47,7 +47,7 @@ import calpers.spring.model.User;
 import calpers.spring.service.UserService;
 
 @Controller
-@SessionAttributes({"loginDetails","imageDetails"})
+@SessionAttributes({"loginDetails","imageDetails","msg"})
 //@SessionAttributes("imageDetails")
 public class LoginController {
 	@Autowired
@@ -83,7 +83,7 @@ public class LoginController {
 				System.out.println(image.getEmail());
 				mav.addObject("image",image.getBase64Image());
 				mav.addObject("imageDetails", image.getBase64Image());
-				mav.addObject("message", image.getMessage());
+				mav.addObject("msg", image.getMessage());
 			}
 			else {
 				mav.addObject("notexists","Looks like your signature is not uploaded. Please upload or draw it!");
@@ -94,7 +94,7 @@ public class LoginController {
 		}
 		else {
 			mav = new ModelAndView("home");
-			mav.addObject("message", "Username or Password is wrong!!");
+			mav.addObject("message", "Email or Password is wrong!!");
 		}
 		return mav;
 	}
@@ -149,6 +149,7 @@ public class LoginController {
 			mav = new ModelAndView("uploadsignature");
 			Image image1 = userService.validateEsign(email);
 			mav.addObject("imageDetails", image1.getBase64Image());
+			mav.addObject("msg", image1.getMessage());
 			mav.addObject("success", "Image successfully inserted.!");
 			return mav;
 		}
@@ -181,6 +182,7 @@ public class LoginController {
 
 				Image image1 = userService.validateEsign(data[1]);
 				mav.addObject("imageDetails", image1.getBase64Image());
+				mav.addObject("msg", image1.getMessage());
 				mav.addObject("success", "Image successfully inserted.!");
 				System.out.println("inside here");
 			}
@@ -244,30 +246,31 @@ public class LoginController {
 			@RequestParam("email") String email) {
 		ModelAndView mav = new ModelAndView("forgotpassword");
 		User user1 = userService.findUserByEmail(email);
-		String subject="password reset";
+		String subject="Greetings from CalPERS";
 		String message=null;
 		if (null != user1 && null !=user1.getFirstname()) {
 
 			//PasswordResetToken confirmationToken = new PasswordResetToken();
 
-			mav.addObject("success", "If user is registered, an e-mail will be sent with reset password instructions ");
+			mav.addObject("success", "If user is registered,\n an e-mail will be sent with reset password instructions ");
 			SimpleMailMessage msg = new SimpleMailMessage();
 			String randomtoken = UUID.randomUUID().toString();
 
 			int res=userService.insertToken(email,randomtoken);
-
-			message="http://localhost:8080/e-sign/confirmPassword?token="+randomtoken;
+			String message1= "Please use below link to reset your password.\n Below url wll be valid for only one hour.\n  ";
+			message=message1+"http://localhost:8080/e-sign/confirmPassword?token="+randomtoken;
 			// userService.createPasswordResetTokenForUser(email, token);
 			msg.setTo(email);
 			msg.setSubject(subject);
 			msg.setText(message);
+			//msg.setText(message1);
 
 			// sends the e-mail
 			mailSender.send(msg);
 
 		}
 		else {
-			mav.addObject("error", "If you user is registered, an e-mail will be sent with reset password instructions");
+			mav.addObject("error", "If user is registered,\n an e-mail will be sent with reset password instructions");
 		}
 
 		return mav;
@@ -309,7 +312,7 @@ public class LoginController {
 		
 		if(user1 == null) {
 			mav = new ModelAndView("home");
-			mav.addObject("resfail","User doesnot exists. PLease try again");
+			mav.addObject("resfail","User doesnot exists. Please try again");
 		}
 		else {
 			
@@ -323,11 +326,12 @@ public class LoginController {
 			}
 		}
 		else {
+			mav = new ModelAndView("resetpassword");
 			mav.addObject("email", email);
 			mav.addObject("token", token);
 			//.addObject("logindetails",user1);
-				mav = new ModelAndView("resetpassword");
-				mav.addObject("error","both the passwords should match");
+				
+				mav.addObject("error","Passwords should match");
 			}
 		
 		return mav;

@@ -1,10 +1,20 @@
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="/e-sign/res/css/icon.css">
 <style>
+.footer{
+ position:fixed;
+ bottom:0;
+ left:0;
+ text-align: center;
+	background-color: DarkSalmon;
+	color: white;
+	width:100%;
+}
 .button {
 	border: none;
 	color: white;
@@ -35,13 +45,13 @@
 .button2 {
 	background-color: #008CBA;
 } /* Blue */
-footer {
-  text-align: center;
-  
-  background-color: DarkSalmon;
-  color: white;
+.my-notify-warning {
+    color: #9F6000;
+    background-color: #FEEFB3;
 }
 </style>
+<script
+	src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
@@ -57,7 +67,11 @@ footer {
 <meta http-equiv="Expires" Content="0" />
 <title>Login</title>
 </head>
-<body>
+<script>
+var msg1 = ${msg};
+</script>
+<body background="/e-sign/res/img/sketch.jpg" style="background-repeat: no-repeat;background-size: 100%;">
+
 	<header> <nav class="navbar navbar-expand-md navbar-dark"
 		style="background-color: #008CBA; height:70px;">
 
@@ -75,16 +89,21 @@ footer {
 
 	<div id="captioncon" style="text-align: center;">
 		<caption>
-			<h2 style="text-align: center;">Welcome
-				${loginDetails.firstname}</h2>
-			<h2 style="font-style: italic; color: red;">${message}</h2>
-			<h2 style="font-style: italic; color: red;">${notexists}</h2>
+			<h2 style="text-align: center;">Welcome to CalPERS
+				${loginDetails.firstname}.</h2>
+			<!--<h2 style="font-style: italic; color: red;">${msg}</h2> 
+			 <h2 style="font-style: italic; color: red;">${notexists}</h2> -->
 			<h3>${success}</h3>
 			<h3>${error}</h3>
+			
+				
+			
 
 		</caption>
+		<div class="my-notify-warning" style="width:100%;float:center;">${msg}</div>
 	</div>
-	
+<div >
+
 	<div id="imgcont" style="text-align: center;">
 		<img src="data:image/png;base64,${imageDetails}" width="400"
 			height="200" />
@@ -118,15 +137,14 @@ footer {
 			Signature</button>
 
 	</div>
-	
-	<div id="footcon" style="padding-top:85px">
-	<footer>
-  <p>Contact<br>
-   Team PHANTOMS<br>
-   Department of CSc<br>
-   California State University, Sacramento<br>
-  </p>
-</footer>
+</div>
+	<div id="footcon" style="padding-bottom: 5px">
+		<footer class="footer">
+		<p>
+			Contact<br> Team PHANTOMS<br> Department of CSc<br>
+			California State University, Sacramento<br>
+		</p>
+		</footer>
 	</div>
 	<!--   <iframe src ="uploadsignature.jsp" width="100%" height="1100" frameborder="0px"></iframe> -->
 </body>

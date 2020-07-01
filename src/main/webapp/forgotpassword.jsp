@@ -3,12 +3,14 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'">
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
 	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
 	crossorigin="anonymous">
 <script
 	src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/e-sign/res/css/icon.css">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -21,9 +23,33 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 }
 /* form {border: 3px solid #f1f1f1;}*/
-input[type=text], input[type=password] {
+.input-icons i { 
+            position: absolute; 
+        } 
+	
+	.input-icons { 
+            width: 100%; 
+            margin-bottom: 10px; 
+        } 
+
+	.icon { 
+            padding: 18px; 
+            min-width: 40px; 
+        } 
+
+	.input-field { 
+            width: 100%; 
+            padding: 10px; 
+            Text-align:left; 
+        } 
+        .card {
+        margin: 0 auto; /* Added */
+        float: none; /* Added */
+        margin-bottom: 10px; /* Added */
+}
+input[type=email], input[type=password] {
 	width: 100%;
-	padding: 12px 20px;
+	padding: 18px 40px;
 	margin: 8px 0;
 	display: inline-block;
 	border: 1px solid #ccc;
@@ -79,9 +105,11 @@ span.psw {
 		width: 100%;
 	}
 }
-h3{
 
+.card-body{
+  width:450px; adjust this value according your requirement
 }
+
 body {
 	/*  background-image: url('bg-yosemite.jpg'); */
 	background-repeat: no-repeat;
@@ -90,27 +118,39 @@ body {
 }
 </style>
 </head>
+<script>
+var success=${success };
+var error= ${error };
+var errorexp=${errorexp };
+</script>
 <body background="/e-sign/res/img/bg-yosemite.jpg">
 	<div class="imgcontainer">
 		<img src="<c:url value="/res/img/logo.png"/>" alt="Avatar"
 			class="avatar">
 	</div>
 	<div class="container">
-		<h3 >${success }</h3>
-		<h3>${error }</h3>
-		<h3>${errorexp }</h3>
+
 		<div class="row">
-			<div class="col-sm-auto" style="padding-left: 400px;text-align:center;">
 				<div class="card">
 					<article class="card-body">
-
+						<c:if test="${not empty error}">
+						<div class="my-notify-success">${error}</div>
+					</c:if> <c:if test="${not empty errorexp}">
+						<div class="my-notify-error">${errorexp}</div>
+					</c:if> 
+					<c:if test="${not empty success}">
+						<div class="my-notify-success">${success}</div>
+					</c:if>
 					<form id="forgotPassword" modelAttribute="email"
 						action="forgotPassword" method="post">
 						<div class="form-group">
-							<label >Your email</label> <input name="email" id="email"
+							<label>Your email</label>
+							<div class="input-icons"> 
+            		<i class="fa fa-envelope icon"></i>
+							 <input name="email" id="email"
 								class="form-control" placeholder="Email" type="email" required>
 							<!-- form-group// -->
-
+					</div>
 						</div>
 						<!-- form-group// -->
 						<div class="form-group">

@@ -27,7 +27,7 @@ public class RegistrationController {
   System.out.println(res);
   if(res>0) {
 	  String success="Account successfully created. Please login!";
-  return new ModelAndView("home", "Success", success);
+  return new ModelAndView("home", "success", success);
   }
   else if(res==0) {
 	  String error="Enter the correct password";

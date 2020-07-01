@@ -185,21 +185,22 @@
                class="form-control" name="email" id="email" minlength="5" readonly>
                
      <main class="page">
-            <!-- input file -->
-        <div class="box" style="background-color: #4CAF50;">
-            <input type="file" name="image" id="file-input" accept="image/*" data-type='image' required>
-        </div>
+            <!-- input file
+        <div class="box" style="background-color: #4CAF50;"> -->
+            <input class="button button1" type="file" name="image" id="file-input" accept="image/*" data-type='image' required>
+       <!-- </div> --> 
             <!-- leftbox -->
-        <div class="box-2">
+        <div class="box-2" style="vertical-align:bottom">
             <div class="result"></div>
         </div>
+        <br>
             <!--rightbox-->
         <div class="box-2 img-result hide">
             <!-- result of crop -->
             <img class="cropped" src="" alt="" name="cropped" id="cropped">
         </div>
             <!-- input file -->
-        <div class="box">
+        <div class="box" style="text-align:center">
             <div class="options hide">
                 <label> Width</label>
                 <input type="number" class="img-w" value="600" min="600" max="1200" />
