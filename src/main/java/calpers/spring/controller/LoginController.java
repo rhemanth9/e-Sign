@@ -86,9 +86,9 @@ public class LoginController {
 				mav.addObject("msg", image.getMessage());
 				if(null!=image.getPreferName())
 					mav.addObject("prefername", image.getPreferName() );
-				else if(image.getPreferName().equals("error")) {
-					mav.addObject("prefername", user.getFirstname());
-				}
+				else
+					mav.addObject("prefername", user.getFirstname() );
+				
 					
 			}
 			else {
@@ -197,6 +197,7 @@ public class LoginController {
 				mav.addObject("dsuccess", "Image successfully inserted.!");
 				if(null!=image1.getPreferName())
 					mav.addObject("prefername", image1.getPreferName() );
+				
 				System.out.println("inside here");
 			}
 			else {
