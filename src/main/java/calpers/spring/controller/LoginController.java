@@ -47,7 +47,7 @@ import calpers.spring.model.User;
 import calpers.spring.service.UserService;
 
 @Controller
-@SessionAttributes({"loginDetails","imageDetails","msg"})
+@SessionAttributes({"loginDetails","imageDetails","msg","dsuccess","usuccess","prefername"})
 //@SessionAttributes("imageDetails")
 public class LoginController {
 	@Autowired
@@ -84,6 +84,12 @@ public class LoginController {
 				mav.addObject("image",image.getBase64Image());
 				mav.addObject("imageDetails", image.getBase64Image());
 				mav.addObject("msg", image.getMessage());
+				if(null!=image.getPreferName())
+					mav.addObject("prefername", image.getPreferName() );
+				else if(image.getPreferName().equals("error")) {
+					mav.addObject("prefername", user.getFirstname());
+				}
+					
 			}
 			else {
 				mav.addObject("notexists","Looks like your signature is not uploaded. Please upload or draw it!");
@@ -116,7 +122,9 @@ public class LoginController {
 		String imageString=request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 		String[] data=imageString.split("-");
 		System.out.println("base64 string:"+imageString);
+		System.out.println(data[2]);
 		String email=data[1];
+		String prefername=data[2];
 		byte[] contentData = data[0].getBytes();
 		byte[] decodedData = Base64.getDecoder().decode(contentData);
 		
@@ -137,20 +145,22 @@ public class LoginController {
 	    }
 	    Process p = Runtime.getRuntime().exec("C:\\Users\\somis\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_qbz5n2kfra8p0\\python.exe \"C:\\CSC 230\\e-sign_web\\e-sign\\process_sign.py\"");
 	    //res = 1;
-	    Thread.sleep(3000);
+	      Thread.sleep(3000);
 	    
 	    File res_file = new File("C:\\CSC 230\\e-sign_web\\e-sign\\temp_images\\temp_result.jpeg");
 	    FileInputStream res_input = new FileInputStream(res_file);
 	    MultipartFile multipartFile = new MockMultipartFile("res_file",
 	    		res_file.getName(), "image/jpg", IOUtils.toByteArray(res_input));
-	    res=userService.insertImage(email, multipartFile);
+	    res=userService.insertImage(email, multipartFile,prefername);
 	    
 		if(res!=0) {
 			mav = new ModelAndView("uploadsignature");
 			Image image1 = userService.validateEsign(email);
 			mav.addObject("imageDetails", image1.getBase64Image());
 			mav.addObject("msg", image1.getMessage());
-			mav.addObject("success", "Image successfully inserted.!");
+			if(null!=image1.getPreferName())
+				mav.addObject("prefername", image1.getPreferName() );
+			mav.addObject("usuccess", "Image successfully inserted.!");
 			return mav;
 		}
 		else {
@@ -175,15 +185,18 @@ public class LoginController {
 			//System.out.println(email);
 			System.out.println(data[0]);
 			System.out.println(data[1]);
+			System.out.println(data[2]);
 			byte[] contentData = data[0].getBytes();
 			byte[] decodedData = Base64.getDecoder().decode(contentData);
-			res = userService.insertDrawImage(data[1], decodedData);
+			res = userService.insertDrawImage(data[1], decodedData,data[2]);
 			if(res>0) {
 
 				Image image1 = userService.validateEsign(data[1]);
 				mav.addObject("imageDetails", image1.getBase64Image());
 				mav.addObject("msg", image1.getMessage());
-				mav.addObject("success", "Image successfully inserted.!");
+				mav.addObject("dsuccess", "Image successfully inserted.!");
+				if(null!=image1.getPreferName())
+					mav.addObject("prefername", image1.getPreferName() );
 				System.out.println("inside here");
 			}
 			else {
@@ -231,12 +244,13 @@ public class LoginController {
 				mav.addObject("address", user1.getAddress());
 				mav.addObject("organization", user1.getOrganization());
 				mav.addObject("loginDetails", user1);
+				mav.addObject("upsuccess", "Updated successfully.!");
 			}
 			//return new ModelAndView("login", "firstname", user.getFirstname());
 			return mav;
 		}
 		else {
-			String error="Please enter correct details";
+			String error="Mobile number already exists.!";
 			return new ModelAndView("welcome","error",error);
 		}
 	}
@@ -252,12 +266,12 @@ public class LoginController {
 
 			//PasswordResetToken confirmationToken = new PasswordResetToken();
 
-			mav.addObject("success", "If user is registered,\n an e-mail will be sent with reset password instructions ");
+			mav.addObject("success", "If user is registered,\n an e-mail will be sent with reset password instructions. ");
 			SimpleMailMessage msg = new SimpleMailMessage();
 			String randomtoken = UUID.randomUUID().toString();
 
 			int res=userService.insertToken(email,randomtoken);
-			String message1= "Please use below link to reset your password.\n Below url wll be valid for only one hour.\n  ";
+			String message1= "Please use below link to reset your password.\n Below url wll be valid only for one hour.\n  ";
 			message=message1+"http://localhost:8080/e-sign/confirmPassword?token="+randomtoken;
 			// userService.createPasswordResetTokenForUser(email, token);
 			msg.setTo(email);
@@ -270,7 +284,7 @@ public class LoginController {
 
 		}
 		else {
-			mav.addObject("error", "If user is registered,\n an e-mail will be sent with reset password instructions");
+			mav.addObject("error", "If user is registered,\n an e-mail will be sent with reset password instructions.");
 		}
 
 		return mav;
@@ -319,7 +333,7 @@ public class LoginController {
 				int res = userService.updatePassword(user.getEmail(),user.getPassword());
 				if(res>0) {
 					mav = new ModelAndView("home");
-					mav.addObject("ressuccess","Yor password has been reset. Please login");
+					mav.addObject("ressuccess","Your password has been reset. Please login");
 					userService.deactivateToken(email,token);
 				}
 				
@@ -342,6 +356,20 @@ public class LoginController {
 	public String logout(HttpSession session, HttpServletRequest request, HttpServletResponse response){
 		request.getSession().invalidate();
 		return "home";
+	}
+	
+	@RequestMapping(value = {"/valesign"}, method = RequestMethod.GET)
+	public ModelAndView valEsign(HttpSession session, HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("email") String email){
+		ModelAndView mav = new ModelAndView("home") ;
+		Image image1 = userService.validateEsign(email);
+		mav.addObject("imageDetails", image1.getBase64Image());
+		mav.addObject("msg", image1.getMessage());
+		mav.addObject("success", "Image successfully inserted.!");
+		System.out.println("inside here");
+		
+		request.getSession().invalidate();
+		return mav;
 	}
 
 

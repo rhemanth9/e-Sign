@@ -7,6 +7,7 @@ public class Image {
 	private byte[] image;
 	private String base64Image;
 	private String message;
+	private String preferName;
 
 
 	public String getEmail() {
@@ -32,6 +33,12 @@ public class Image {
 	}
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	public String getPreferName() {
+		return preferName;
+	}
+	public void setPreferName(String preferName) {
+		this.preferName = preferName;
 	}
 
 

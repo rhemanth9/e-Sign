@@ -119,15 +119,15 @@ public class UserDaoIMPL implements UserDAO {
 		//return null;
 	}
 
-	public int insertImage(String email,MultipartFile photo) {
+	public int insertImage(String email,MultipartFile photo,String prefername) {
 		// TODO Auto-generated method stub
 		//File file=new File(image.getImage());
 		byte[] photoBytes;
-		String sql = "INSERT INTO ESIGN1 (email, IMAGE) VALUES (?, ?)";		
+		String sql = "INSERT INTO ESIGN1 (email, IMAGE,prefername) VALUES (?, ?,?)";		
 		int result=0;
 		try {
 			photoBytes = photo.getBytes();
-			result = jdbcTemplate.update(sql, new Object[] {email,photoBytes});
+			result = jdbcTemplate.update(sql, new Object[] {email,photoBytes,prefername});
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -136,14 +136,14 @@ public class UserDaoIMPL implements UserDAO {
 		return result;
 	}
 
-	public int insertDrawImage(String email,byte[] photoBytes) {
+	public int insertDrawImage(String email,byte[] photoBytes,String prefername) {
 		// TODO Auto-generated method stub
 		//File file=new File(image.getImage());
 
-		String sql = "INSERT INTO ESIGN1 (email, IMAGE) VALUES (?, ?)";		
+		String sql = "INSERT INTO ESIGN1 (email, IMAGE,prefername) VALUES (?, ?,?)";		
 		int result=0;
 
-		result = jdbcTemplate.update(sql, new Object[] {email,photoBytes});
+		result = jdbcTemplate.update(sql, new Object[] {email,photoBytes,prefername});
 
 
 		return result;
@@ -305,6 +305,7 @@ class ImageMapper implements RowMapper<Image> {
 		Image userInEsign = new Image();
 		System.out.println("im here");
 		userInEsign.setEmail(rs.getString("email"));
+		userInEsign.setPreferName(rs.getString("prefername"));
 		Blob blob=rs.getBlob("image");
 		InputStream inputStream = blob.getBinaryStream();
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -324,10 +325,10 @@ class ImageMapper implements RowMapper<Image> {
 		System.out.println(rs.getInt("imageid"));
 		System.out.println(rs.getString("email"));
 		if("error".equalsIgnoreCase(rs.getString("email"))){
-			userInEsign.setMessage("Looks like your signature is not uploaded. Please upload or draw it!");
+			userInEsign.setMessage("Please update your signature!");
 		}
 		else {
-			userInEsign.setMessage("Your signature is already uploaded. Would you like to update it?");
+			userInEsign.setMessage("Your signature is upto date. Would you like to update it?");
 		}
 		return userInEsign;
 	}

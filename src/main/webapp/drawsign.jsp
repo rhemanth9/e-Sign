@@ -24,7 +24,7 @@
 <script type="text/javascript">
 	// Variables for referencing the canvas and 2dcanvas context
 	var canvas, ctx;
-
+	
 	// Variables to keep track of the mouse position and left-button status
 	var mouseX, mouseY, mouseDown = 0;
 
@@ -86,10 +86,15 @@
 	// Convert the canvas contents to a PNG image file, and copy it into a smaller image on the page so it can be saved more easily
 	// From: http://stackoverflow.com/questions/10673122/how-to-save-canvas-as-an-image-with-canvas-todataurl
 	function updateImageLocal(canvas) {
+		
+		
+		//alert("2");
 		var image_data = canvas.toDataURL("image/png");
+		//alert(disp);
+		//disp.classList.remove('hide');
 		// Displaying the image data in a "normal" image means users need to click or long-tap on it to save, but is compatible with
 		// more devices
-		document.getElementById('image_display').src = image_data; // Place the image data in to the form
+		document.getElementById('image_display').src = image_data;// Place the image data in to the form
 	}
 	// Convert the canvas contents to a PNG image file, and output it in a new browser window
 	// From: http://stackoverflow.com/questions/10673122/how-to-save-canvas-as-an-image-with-canvas-todataurl
@@ -154,8 +159,12 @@
 		}
 	}
 
+	
+    
 	// Draw something when a touch start is detected
 	function sketchpad_touchStart() {
+		
+		
 		// Update the touch co-ordinates
 		getTouchPos();
 
@@ -163,12 +172,15 @@
 
 		// Prevents an additional mousedown event being triggered
 		event.preventDefault();
+		
 	}
 
 	function sketchpad_touchEnd() {
 		// Reset lastX and lastY to -1 to indicate that they are now invalid, since we have lifted the "pen"
 		lastX = -1;
 		lastY = -1;
+		//
+		//alert("1");
 		updateImageLocal(canvas);
 	}
 
@@ -243,6 +255,7 @@
 		
 		var canvasServer = document.getElementById("sketchpad");
 		var email = document.getElementById("email").value;
+		var prefname = document.getElementById("prefername").value;
 	    var context = canvasServer.getContext("2d");  
 	    
 	    var imageDataURL = canvasServer.toDataURL('image/png');
@@ -262,15 +275,27 @@
 	    
 	      if (!isCanvasBlank(canvas)){
 	    	  
-	    	  ajax.open("POST","insertDrawImage",false); 
-	    	  alert("Signature is uploaded");
+	    	  ajax.open("POST","insertDrawImage",false);
+	    	  ajax.onreadystatechange=function()
+	          {
+	    		  //alert("Signature is uploaded");
+	    	      if (ajax.readyState==4)
+	    	        {
+	    	            //alert("State: "+ajax.readyState+" and Status: "+ajax.status);
+	    	            var successUrl = "login.jsp"; // might be a good idea to return this URL in the successful AJAX call
+	    	            window.location.href = successUrl;
+	    	        }
+	    	      }
+	    	  ajax.send(formdata+"-"+email+"-"+prefname);
+	    	  
+	    	  
 	      }else{
 	    	  alert("Please draw the image");
 	      }
 	    
 	    
 	    //ajax.setRequestHeader("Content-Type", "application/upload");
-	    ajax.send(formdata+"-"+email);
+	   
 	    
 	    
 	    if (canvas.getContext)
@@ -302,19 +327,34 @@
 
 <style>
 /* Some CSS styling */
-.fa{
-background-color: #008CBA;
-font-size: 20px;
-color: white;
-
+body {
+	margin-top: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		"Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+		"Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
+	color: #212529;
+	text-align: left;
+	background-color: #fff;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: 100% 100%;
 }
 
-.fas{
-background-color: #008CBA;
-font-size: 20px;
-color: white;
-
+.fa {
+	background-color: #008CBA;
+	font-size: 20px;
+	color: white;
 }
+
+.fas {
+	background-color: #008CBA;
+	font-size: 20px;
+	color: white;
+}
+
 #sketchpadapp {
 	/* Prevent nearby text being highlighted when accidentally dragging mouse outside confines of the canvas */
 	-webkit-touch-callout: none;
@@ -338,19 +378,18 @@ color: white;
 .rightside {
 	float: left;
 	margin-left: 10px;
-	margin-top: 30px;
-	text-align : center;
+	margin-top: 20px;
+	/*text-align : center;*/
 }
 
 #sketchpad {
-	
 	float: left;
 	height: 200px;
 	width: 700px;
 	border: 2px solid #888;
 	border-radius: 4px;
 	position: relative;
-	text-align:center;
+	/*text-align : center;*/
 	/* Necessary for correct mouse co-ords in Firefox */
 }
 
@@ -369,7 +408,8 @@ color: white;
 
 .save_box {
 	/*border: 1px solid #bbb;*/
-	text-align: center;
+	/*text-align : center;*/
+	text-align: left;
 	border-radius: 4px;
 	padding: 5px;
 	clear: both;
@@ -394,6 +434,10 @@ color: white;
 	cursor: pointer;
 }
 
+.hide {
+	display: none;
+}
+
 .button1 {
 	background-color: #4CAF50;
 } /* Green */
@@ -405,37 +449,44 @@ color: white;
 } /* Blue */
 </style>
 </head>
-<header>
-<nav class="navbar navbar-expand-md navbar-dark"
-		style="background-color: #008CBA; height:70px;" >
-	<ul class="navbar-nav">
-	
-	<li ><a href="login.jsp" class="fa fa-home" class="nav-link"> Home  </a></li>
-	
-		
-	</ul>
-	<ul class="navbar-nav">
-		<li style="padding-left:7px;"> <a href="fetchDetails" class="fas fa-user" class="nav-link"> Account  </a></li>
-	</ul>
-	<ul class="navbar-nav">
-		<li style="padding-left:7px;"><a href="uploadsignature.jsp"  class="fas fa-upload" class="nav-link"> Upload Sign </a></li>
-	</ul>
+<header> <nav class="navbar navbar-expand-md navbar-dark"
+	style="background-color: #008CBA; height:70px;">
+<ul class="navbar-nav">
 
-	<ul class="navbar-nav navbar-collapse justify-content-end">
-		<li style="padding-left:7px;"><a href="logout" class="fas fa-power-off" class="nav-link"> Logout</a></li>
-	</ul>
-	</nav> </header>
-<div id="captioncont"  style="text-align: center;">
-<caption>
-	<br> <br> <br>
-	<h4>Welcome ${loginDetails.firstname}..! Please draw the signature
-		and submit.!</h4>
-	<h5>${success}</h5>
-	<h5>${error}</h5>
-</caption>
+	<li><a href="login.jsp" class="fa fa-home" class="nav-link">
+			Home </a></li>
+
+
+</ul>
+<ul class="navbar-nav">
+	<li style="padding-left: 7px;"><a href="fetchDetails"
+		class="fas fa-user" class="nav-link"> Account </a></li>
+</ul>
+<ul class="navbar-nav">
+	<li style="padding-left: 7px;"><a href="uploadsignature.jsp"
+		class="fas fa-upload" class="nav-link"> Upload Sign </a></li>
+</ul>
+
+<ul class="navbar-nav navbar-collapse justify-content-end">
+	<li style="padding-left: 7px;"><a href="logout"
+		class="fas fa-power-off" class="nav-link"> Logout</a></li>
+</ul>
+</nav> </header>
+<div id="captioncont" style="padding-left: 35px">
+	<caption>
+		<br> <br> <br>
+		<h1 style="color:#008CBA;">Welcome ${loginDetails.firstname}! Please draw the
+			signature and submit.!</h1>
+		<h5>${success}</h5>
+		<h5>${error}</h5>
+	</caption>
 </div>
-<body onload="init()">
-
+<body onload="init()" background="/e-sign/res/img/7.jpg">
+<br>
+			
+				<label style="font-size:18px;padding-left:20px;"><strong><b>Preferred Name:</b></strong></label>
+				<input path="prefername" value="${prefername}" type="text" name="prefername" id="prefername" required>
+			
 	<div id="sketchpadapp">
 		<div class="rightside">
 			<canvas id="sketchpad" height="200" width="700"> </canvas>
@@ -446,7 +497,6 @@ color: white;
 			value="Clear" id="clearbutton"
 			onclick="clearCanvas(canvas,ctx);">
 	</div>
-	<br>
 	<br>
 	<br>
 	<br>
@@ -467,7 +517,7 @@ color: white;
 	</div>
 	
 	<div class="save_box">
-	<h4>You can see how your sign looks like in the below window</h4>
+	<h4 style="color:#008CBA;"><strong>You can see how your sign looks like in the below window</strong></h4>
 		<left>
 			<!-- Our Sketchpad thumbnail -->
 			<img id="image_display">
@@ -475,6 +525,6 @@ color: white;
 	</div>
 	</div>
 
-	
+
 </body>
 </html>

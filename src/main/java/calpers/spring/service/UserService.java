@@ -13,8 +13,8 @@ public interface UserService {
 	 User validateUser1(Login loginCredentials);
 	  User validateUser(Login login);
 	  int updateUser(User user);
-	  int insertImage(String email,MultipartFile photo);
-	  int insertDrawImage(String email,byte[] photoBytes);
+	  int insertImage(String email,MultipartFile photo,String prefername);
+	  int insertDrawImage(String email,byte[] photoBytes,String prefername);
 	  Image validateEsign(String email);
 	  User findUserByEmail(String email);
 	//void createPasswordResetTokenForUser(String email, String token);

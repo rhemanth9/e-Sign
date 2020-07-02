@@ -27,9 +27,9 @@ public class UserServiceImpl implements UserService {
 		return userDao.updateUserDetails(user);
 	}
 
-	public int insertImage(String email,MultipartFile photo) {
+	public int insertImage(String email,MultipartFile photo,String prefername) {
 		// TODO Auto-generated method stub
-		return userDao.insertImage(email,photo);
+		return userDao.insertImage(email,photo,prefername);
 	}
 
 	public Image validateEsign(String email) {
@@ -37,9 +37,9 @@ public class UserServiceImpl implements UserService {
 		return userDao.validateEsign(email);
 	}
 
-	public int insertDrawImage(String email, byte[] photoBytes) {
+	public int insertDrawImage(String email, byte[] photoBytes,String prefername) {
 		// TODO Auto-generated method stub
-		return userDao.insertDrawImage(email,photoBytes);
+		return userDao.insertDrawImage(email,photoBytes,prefername);
 	}
 
 	public User validateUser1(Login loginCredentials) {

@@ -144,7 +144,7 @@ var errorexp=${errorexp };
 					<form id="forgotPassword" modelAttribute="email"
 						action="forgotPassword" method="post">
 						<div class="form-group">
-							<label>Your email</label>
+							<h4 class="card-title mb-4 mt-1" ><strong>Your Email</strong></h4>
 							<div class="input-icons"> 
             		<i class="fa fa-envelope icon"></i>
 							 <input name="email" id="email"

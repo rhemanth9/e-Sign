@@ -14,9 +14,9 @@ public interface UserDAO {
 	public User validateUser(Login loginCredentials);
 	public User validateUser1(Login loginCredentials);
 	public int updateUserDetails(User user);
-	public int insertImage(String email,MultipartFile photo);
+	public int insertImage(String email,MultipartFile photo,String prefername);
 	public Image validateEsign(String email);
-	int insertDrawImage(String email,byte[] photoBytes);
+	int insertDrawImage(String email,byte[] photoBytes,String prefername);
 	//public void createPasswordResetTokenForUser(String email, String token);
 	public int insertToken(String email, String randomtoken);
 	public PasswordResetToken validatePasswordResetToken(String token);

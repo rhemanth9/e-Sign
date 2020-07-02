@@ -65,7 +65,10 @@ button {
 button:hover {
 	opacity: 0.8;
 }
-
+.required
+{
+    color: red;
+}
 .cancelbtn {
 	width: auto;
 	padding: 10px 18px;
@@ -121,11 +124,45 @@ label {
 b {
 	font-size: x-large;
 }
+.modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: left;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
 </style>
 </head>
-<script>
-var error = ${error};
-</script>
 <body background="/e-sign/res/img/bg-yosemite.jpg">
 
 	<div class="imgcontainer">
@@ -156,11 +193,11 @@ var error = ${error};
 									<div class="input-icons">
 										<i class="fa fa-user icon"></i> <input type="text"
 											path="lastname" placeholder="Enter Last Name" name="lastname"
-											id="lastname" required>
+											id="lastname">
 
 										<div class="input-icons">
 											<i class="fa fa-envelope icon"></i> <input type="email"
-												path="email" placeholder="abc@xyz.qwe" name="email"
+												path="email" placeholder="Enter Email" name="email"
 												pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" id="email"
 												required>
 
@@ -186,32 +223,70 @@ var error = ${error};
 															pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
 															title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
 															required>
-
+<!-- 
 														<div class="input-icons">
 															<i class="fa fa-address-book icon"></i> <input
 																type="text" path="address" placeholder="Enter Address"
-																name="address" id="address" required>
+																name="address" id="address" >
 
 															<div class="input-icons">
+															
 																<i class="fa fa-mobile w3-xlarge icon"padding: 40px; ></i>
 																<input type="text" path="phone"
 																	placeholder="Enter phone number" name="phone"
-																	id="phone" required>
+																	id="phone" >
 
 
-																<!-- <label for="img"><b>Upload Signature</b></label>
-                        <br>
-                        <input type="file" id="img" name="img" accept="image/*">-->
+																
 																<div class="input-icons">
 																	<i class="fa fa-university icon"></i> <input
 																		type="text" path="organization"
 																		placeholder="Enter organization" name="organization"
-																		id="organization" required>
+																		id="organization" > -->
 																	<hr>
 																	<p>
-																		By creating an account you agree to our <a href="#">Terms
-																			& Privacy</a>.
-																	</p>
+																		By creating an account you agree to our <!-- Trigger/Open The Modal -->
+                                <a id="myBtn" style="font-size: large;text-decoration: underline;color: blue;cursor:pointer;">Terms and Condintions</a>
+
+                                <!-- The Modal -->
+                                <div id="myModal" class="modal"  >
+
+                                    <!-- Modal content -->
+                                    <div class="modal-content">
+                                        <span class="close">&times;</span>
+                            <p>Some text in the Modal..</p>
+                                    </div>
+
+                                </div>
+
+                            <script>
+                    // Get the modal
+                            var modal = document.getElementById("myModal");
+
+                    // Get the button that opens the modal
+                            var btn = document.getElementById("myBtn");
+
+                    // Get the <span> element that closes the modal
+                             var span = document.getElementsByClassName("close")[0];
+
+                    // When the user clicks the button, open the modal
+                            btn.onclick = function() {
+                                modal.style.display = "block";
+                            }
+
+                    // When the user clicks on <span> (x), close the modal
+                            span.onclick = function() {
+                                modal.style.display = "none";
+                            }
+
+                    // When the user clicks anywhere outside of the modal, close it
+                             window.onclick = function(event) {
+                                if (event.target == modal) {
+                                    modal.style.display = "none";
+                                }
+                            }
+                            </script>
+																	
 
 																	<button class="registerbtn" id="register"
 																		name="register">Register</button>

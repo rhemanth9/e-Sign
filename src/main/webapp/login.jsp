@@ -11,7 +11,7 @@
  bottom:0;
  left:0;
  text-align: center;
-	background-color: DarkSalmon;
+	background-color: #edac92;
 	color: white;
 	width:100%;
 }
@@ -67,11 +67,13 @@
 <meta http-equiv="Expires" Content="0" />
 <title>Login</title>
 </head>
+
+<body background="/e-sign/res/img/esig.jpg" style="background-repeat: no-repeat;">
 <script>
 var msg1 = ${msg};
+var isuccess=${isuccess};
+var dsuccess=${dsuccess};
 </script>
-<body background="/e-sign/res/img/sketch.jpg" style="background-repeat: no-repeat;background-size: 100%;">
-
 	<header> <nav class="navbar navbar-expand-md navbar-dark"
 		style="background-color: #008CBA; height:70px;">
 
@@ -89,8 +91,7 @@ var msg1 = ${msg};
 
 	<div id="captioncon" style="text-align: center;">
 		<caption>
-			<h2 style="text-align: center;">Welcome to CalPERS
-				${loginDetails.firstname}.</h2>
+			<h2 style="text-align: center;">Welcome to CalPERS e-Signature portal, ${loginDetails.firstname}. </h2>
 			<!--<h2 style="font-style: italic; color: red;">${msg}</h2> 
 			 <h2 style="font-style: italic; color: red;">${notexists}</h2> -->
 			<h3>${success}</h3>
@@ -100,11 +101,17 @@ var msg1 = ${msg};
 			
 
 		</caption>
-		<div class="my-notify-warning" style="width:100%;float:center;">${msg}</div>
+		 <div class="my-notify-warning" style="width:100%;float:center;">${msg}</div>
+		<!--<c:if test="${not empty msg1}">
+ 			<div class="my-notify-warning">${msg}</div>
+		</c:if>
+		<c:if test="${not empty usuccess}">
+ 			<div class="my-notify-success">${usuccess}</div>
+		</c:if> -->
 	</div>
 <div >
 
-	<div id="imgcont" style="text-align: center;">
+	<div id="imgcont" style="text-align: right;padding-right:150px;padding-top:25px;">
 		<img src="data:image/png;base64,${imageDetails}" width="400"
 			height="200" />
 	</div>
@@ -128,7 +135,7 @@ var msg1 = ${msg};
 	</form>
 	
 	  <a href="uploadsignature.jsp">Upload Signature</a>-->
-	<div id="btncon" style="text-align: center;">
+	<div id="btncon" style="text-align: right;padding-right:150px;padding-top:25px;">
 		<button class="button button1" href="uploadsignature.jsp"
 			onclick="window.location.href='/e-sign/uploadsignature.jsp'">Upload
 			Signature</button>
@@ -142,7 +149,7 @@ var msg1 = ${msg};
 		<footer class="footer">
 		<p>
 			Contact<br> Team PHANTOMS<br> Department of CSc<br>
-			California State University, Sacramento<br>
+			California State University, Sacramento.
 		</p>
 		</footer>
 	</div>

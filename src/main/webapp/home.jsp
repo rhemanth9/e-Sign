@@ -49,7 +49,7 @@ body {
         margin-bottom: 10px; /* Added */
 }
 .card-body{
-  width:450px; adjust this value according your requirement
+  width:450px; //adjust this value according your requirement
 }
 input[type=email], input[type=password] {
 	width: 100%;
@@ -201,7 +201,7 @@ var ressuccess = ${ressuccess};
 					 <a href="register"
 						class="float-right btn btn-outline-primary">Sign up</a>
 					
-					<h4 class="card-title mb-4 mt-1">Sign in</h4>
+					<h4 class="card-title mb-4 mt-1" ><strong>Sign in</strong></h4>
 					<form id="loginForm" modelAttribute="login" action="loginProcess"
 						method="post">
 						<div class="form-group">
