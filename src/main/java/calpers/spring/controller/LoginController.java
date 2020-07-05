@@ -87,16 +87,12 @@ public class LoginController {
 				if(null!=image.getPreferName())
 					mav.addObject("prefername", image.getPreferName() );
 				else
-					mav.addObject("prefername", user.getFirstname() );
-				
-					
+					mav.addObject("prefername", user.getFirstname() );		
 			}
 			else {
 				mav.addObject("notexists","Looks like your signature is not uploaded. Please upload or draw it!");
-
 			}
 			mav.addObject("loginDetails", user);
-
 		}
 		else {
 			mav = new ModelAndView("home");
@@ -126,13 +122,12 @@ public class LoginController {
 		String email=data[1];
 		String prefername=data[2];
 		byte[] contentData = data[0].getBytes();
-		byte[] decodedData = Base64.getDecoder().decode(contentData);
-		
-		MultipartFile image = new MockMultipartFile("image/jpeg", decodedData);
-		
+		byte[] decodedData = Base64.getDecoder().decode(contentData);		
+		MultipartFile image = new MockMultipartFile("image/jpeg", decodedData);		
+		//String path = "C:\\CSC 230\\e-sign_web\\e-sign\\temp_images\\"+email+"\\";
 		File dest = new File("C:\\CSC 230\\e-sign_web\\e-sign\\temp_images\\temp.jpeg");
 	    //check destination exists, if not create it
-	    /*if(!dest.exists())
+	   /* if(!dest.exists())
 	    {
 	       dest.mkdir();
 	    }*/
@@ -143,10 +138,12 @@ public class LoginController {
 	    { 
 	        e.printStackTrace();
 	    }
+	    // process which executes python script which removes background of the image. this method takes python.exe location of  
+	    //installation directory and location of the python script.
 	    Process p = Runtime.getRuntime().exec("C:\\Users\\somis\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.8_qbz5n2kfra8p0\\python.exe \"C:\\CSC 230\\e-sign_web\\e-sign\\process_sign.py\"");
 	    //res = 1;
 	      Thread.sleep(3000);
-	    
+	    //String despath = "C:\\CSC 230\\e-sign_web\\e-sign\\temp_images\\"+email+"\\temp_result.jpeg";
 	    File res_file = new File("C:\\CSC 230\\e-sign_web\\e-sign\\temp_images\\temp_result.jpeg");
 	    FileInputStream res_input = new FileInputStream(res_file);
 	    MultipartFile multipartFile = new MockMultipartFile("res_file",
@@ -234,7 +231,7 @@ public class LoginController {
 		System.out.println(res);
 		if(!(res==0)) {
 			ModelAndView mav = null;
-			User user1 = userService.validateUser1(login);
+			User user1 = userService.findUserByEmail(user.getEmail());
 			if (null != user && null !=user.getFirstname()) {
 				mav = new ModelAndView("welcome");
 				mav.addObject("firstname", user1.getFirstname());
@@ -299,7 +296,6 @@ public class LoginController {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
 		LocalDateTime now = LocalDateTime.now();
 		String date=result.getExpDate();
-//&& date.compareTo(dtf.format(now))>0
 		if(result != null && date.compareTo(dtf.format(now))>0 && result.getEnable()==0) {
 			mav = new ModelAndView("resetpassword");
 			User user = userService.findUserByEmail(result.getEmail());
@@ -372,18 +368,6 @@ public class LoginController {
 		request.getSession().invalidate();
 		return mav;
 	}
-
-
-	/* @WebServlet("/logout")
-  public class LogoutServlet extends HttpServlet {
-
-      @Override
-      protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-          request.getSession().invalidate();
-          response.sendRedirect(request.getContextPath() + "/LoginPage.html");
-      }
-
-  }*/
 
 	@ModelAttribute("login")
 	public Login login()

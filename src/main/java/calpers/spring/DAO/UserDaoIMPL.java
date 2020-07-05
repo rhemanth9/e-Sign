@@ -40,6 +40,8 @@ public class UserDaoIMPL implements UserDAO {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+
+	//method used for user registartion
 	public int registerUser(User user) {
 		// TODO Auto-generated method stub
 		if(user.getPassword().equals(user.getConfirmpassword()) && user.getConfirmEmail().equalsIgnoreCase(user.getEmail())) {
@@ -57,6 +59,7 @@ public class UserDaoIMPL implements UserDAO {
 			return 0;
 	}
 
+	//method to find user details by using email
 	public User findUserByEmail(String email) {
 		// TODO Auto-generated method stub
 		System.out.println("dude:"+email);
@@ -74,6 +77,7 @@ public class UserDaoIMPL implements UserDAO {
 
 	}
 
+	//update user details when users try to update in account screen
 	public int updateUserDetails(User user) {
 		// TODO Auto-generated method stub
 		String mobile=user.getPhone();
@@ -89,6 +93,7 @@ public class UserDaoIMPL implements UserDAO {
 
 	}
 
+	//method used to verify the user
 	public User validateUser(Login loginCredentials) {
 		// TODO Auto-generated method stub
 		System.out.println("dude:"+loginCredentials.getPassword());
@@ -104,26 +109,12 @@ public class UserDaoIMPL implements UserDAO {
 		//return null;
 	}
 
-	public User validateUser1(Login loginCredentials) {
-		// TODO Auto-generated method stub
-		System.out.println("dude:"+loginCredentials.getPassword());
-		String sql = "select * from user1 where email='" + loginCredentials.getEmail() + "' and password='" + loginCredentials.getPassword()
-		+ "'";
-		try {
-			List<User> users = jdbcTemplate.query(sql, new UserMapper());
-
-			return users.size() > 0 ? users.get(0) : null;
-		}catch(Exception e) {
-			return null;
-		}
-		//return null;
-	}
-
+	//method to insert uploaded signature
 	public int insertImage(String email,MultipartFile photo,String prefername) {
 		// TODO Auto-generated method stub
 		//File file=new File(image.getImage());
 		byte[] photoBytes;
-		String sql = "INSERT INTO ESIGN1 (email, IMAGE,prefername) VALUES (?, ?,?)";		
+		String sql = "INSERT INTO ESIGN1 (email, IMAGE,prefername,insertdate) VALUES (?, ?,?,CURRENT_TIMESTAMP)";		
 		int result=0;
 		try {
 			photoBytes = photo.getBytes();
@@ -136,11 +127,12 @@ public class UserDaoIMPL implements UserDAO {
 		return result;
 	}
 
+	//method to insert drawn signature
 	public int insertDrawImage(String email,byte[] photoBytes,String prefername) {
 		// TODO Auto-generated method stub
 		//File file=new File(image.getImage());
-
-		String sql = "INSERT INTO ESIGN1 (email, IMAGE,prefername) VALUES (?, ?,?)";		
+		String sql = "INSERT INTO ESIGN1 (email, IMAGE,prefername,insertdate) VALUES (?, ?,?,CURRENT_TIMESTAMP)";	
+		System.out.println(sql);
 		int result=0;
 
 		result = jdbcTemplate.update(sql, new Object[] {email,photoBytes,prefername});
@@ -149,6 +141,7 @@ public class UserDaoIMPL implements UserDAO {
 		return result;
 	}
 
+	//method to display updated signature on login screen 
 	public Image validateEsign(String email) {
 		// TODO Auto-generated method stub
 		String err="error";
@@ -166,6 +159,7 @@ public class UserDaoIMPL implements UserDAO {
 		return userInEsign.size() > 0 ? userInEsign.get(0) : null;
 	}
 
+	//method to insert token details in forgot password table while resetting the password
 	public int insertToken(String email, String token) {
 		// TODO Auto-generated method stub
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
@@ -174,35 +168,14 @@ public class UserDaoIMPL implements UserDAO {
 		System.out.println("now::::"+now1);
 		System.out.println(dtf.format(now));  
 		int enable=0;
-
-		/*// assertThat(now.plusHours(5));
-		   Calendar cal = Calendar.getInstance(); // creates calendar
-		    cal.setTime(new Date()); // sets calendar time/date
-		    cal.add(Calendar.HOUR_OF_DAY, 1); // adds one hour
-		    System.out.println("calendare time: "+cal.getTime()); //
-		   // System.out.println("calendare time: "+dtf.format((TemporalAccessor) cal.getTime()));
-
-		    LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("UTC"));
-		    Instant instant = currentTime.toInstant(ZoneOffset.UTC);
-		    Date currentDate = Date.from(instant);
-		    System.out.println("Current Date = " + currentDate);
-		    currentTime.plusHours(12);		    
-		    LocalDateTime nextTime = currentTime.plusHours(12);
-		    Instant instant2 = nextTime.toInstant(ZoneOffset.UTC);
-		    Date expiryDate = Date.from(instant2);
-		    System.out.println("After 12 Hours = " + expiryDate);
-		    //DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"); 
-		    //System.out.println(dtf.format(expiryDate));  */
-
-
 		String sql = "INSERT INTO forgotpassword (email, token, expirydate,enable) VALUES (?, ?,?,?)";		
 		int result=0;
 
 		result = jdbcTemplate.update(sql, new Object[] {email,token,dtf.format(now1),enable});
 		return result;
 	}
-	
-	
+
+	//validate the session for password token
 
 	public PasswordResetToken validatePasswordResetToken(String token) {
 		// TODO Auto-generated method stub
@@ -219,6 +192,7 @@ public class UserDaoIMPL implements UserDAO {
 		//return null;
 	}
 
+	//method to update password
 	public int updatePassword(String email, String password) {
 		// TODO Auto-generated method stub
 
@@ -232,9 +206,10 @@ public class UserDaoIMPL implements UserDAO {
 		}
 	}
 
+	//deactivate the password reset token once it is used.
 	public int deactivateToken(String email, String token) {
 		// TODO Auto-generated method stub
-		
+
 		String sql = "update forgotpassword set enable=? where email=? and token=?";
 		int enable=1;
 		int res=0;
@@ -245,13 +220,6 @@ public class UserDaoIMPL implements UserDAO {
 			return 0;
 		}
 	}
-
-	//	public void createPasswordResetTokenForUser(String email, String token) {
-	//		// TODO Auto-generated method stub
-	//		PasswordResetToken myToken = new PasswordResetToken(token, user);
-	//	    passwordTokenRepository.save(myToken);
-	//		
-	//	}
 }
 class UserMapper implements RowMapper<User> {
 
@@ -328,7 +296,7 @@ class ImageMapper implements RowMapper<Image> {
 			userInEsign.setMessage("Please update your signature!");
 		}
 		else {
-			userInEsign.setMessage("Your signature is upto date. Would you like to update it?");
+			userInEsign.setMessage("Your signature is up to date. Would you like to update it?");
 		}
 		return userInEsign;
 	}

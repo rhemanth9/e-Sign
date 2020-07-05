@@ -42,11 +42,6 @@ public class UserServiceImpl implements UserService {
 		return userDao.insertDrawImage(email,photoBytes,prefername);
 	}
 
-	public User validateUser1(Login loginCredentials) {
-		// TODO Auto-generated method stub
-		return userDao.validateUser1(loginCredentials);
-	}
-
 	public User findUserByEmail(String email) {
 		// TODO Auto-generated method stub
 		return userDao.findUserByEmail(email);

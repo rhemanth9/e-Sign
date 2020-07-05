@@ -12,7 +12,6 @@ public interface UserDAO {
 	public int registerUser(User user);
 	public User findUserByEmail(String email);
 	public User validateUser(Login loginCredentials);
-	public User validateUser1(Login loginCredentials);
 	public int updateUserDetails(User user);
 	public int insertImage(String email,MultipartFile photo,String prefername);
 	public Image validateEsign(String email);

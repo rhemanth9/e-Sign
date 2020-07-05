@@ -42,6 +42,7 @@ font-size: 20px;
 color: white;
 
 }
+
 .card{
 border: 8px solid #f1f1f1;
 /*padding-left : 30px;*/
@@ -104,6 +105,31 @@ color: white;
     color: #D8000C;
     background-color: #FFD2D2;
 }
+.button {
+	cursor: pointer;
+	display: inline-block;
+    font-weight: 400;
+    color: #212529;
+    text-align: center;
+    vertical-align: middle;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.button1 {
+	background-color: #4CAF50;
+} /* Green */
+.button2 {
+	color: #fff;
+	background-color: #008CBA;
+}
+.hide{
+display:none;
+}
         </style>
         <script>
         var upsuccess=${upsuccess};
@@ -115,6 +141,14 @@ color: white;
         <ul class="navbar-nav">
         <li ><a href="login.jsp" class="fa fa-home" class="nav-link"> Home  </a></li>
         </ul>
+        <ul class="navbar-nav">
+	<li style="padding-left: 7px;"><a href="uploadsignature.jsp"
+		class="fas fa-upload" class="nav-link"> Upload Sign </a></li>
+</ul>
+<ul class="navbar-nav">
+		<li style="padding-left: 7px;"><a href="drawsign.jsp"
+			class="fas fa-marker" class="nav-link"> Draw Sign </a></li>
+	</ul>
 
         <ul class="navbar-nav navbar-collapse justify-content-end">
 		<li style="padding-left:7px;"><a href="logout" class="fas fa-power-off" class="nav-link"> Logout</a></li>
@@ -139,12 +173,12 @@ color: white;
         </caption>
         <fieldset class="form-group">
         <label><b>First Name</b></label> <input type="text" value="${loginDetails.firstname}"
-        class="form-control" name="firstname" required="required">
+        class="form-control" id="firstname" name="firstname" required="required" disabled>
         </fieldset>
 
         <fieldset class="form-group">
         <label><b>Last Name</b></label> <input type="text" value="${loginDetails.lastname}"
-        class="form-control" name="lastname">
+        class="form-control" name="lastname" id="lastname" disabled>
         </fieldset>
         <fieldset class="form-group">
         <label><b>Email</b></label> <input type="text" value="${loginDetails.email}"
@@ -156,34 +190,52 @@ color: white;
        
         <fieldset class="form-group">
         <label><b>Contact</b></label> <input type="text" value="${loginDetails.phone}"
-        class="form-control" name="phone" minlength="10" maxlength="10"
-        title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters">
+        class="form-control" name="phone" minlength="10" maxlength="10" id="phone"
+        title="Must contain 10 digits" disabled>
         </fieldset>
         
         <fieldset class="form-group">
         <label><b>Address</b></label> <input type="text" value="${loginDetails.address}"
-        class="form-control" name="address" minlength="5">
+        class="form-control" name="address" minlength="5" id="address" disabled>
         </fieldset>
 
 		<fieldset class="form-group">
         <label><b>Organization</b></label> <input type="text" value="${loginDetails.organization}"
-        class="form-control" name="organization">
+        class="form-control" name="organization" id="organization" disabled>
         </fieldset>
         
-        
-       <!--  <fieldset class="form-group">
-        <label><b>Date of Birth</b></label> <input type="date"
-        value="<c:out value='${todo.targetDate}' />" class="form-control"
-        name="dob" required="required">
-        </fieldset>
- 		
- 		
-        <button type="submit" class="btn btn-success">Save</button>-->
-        <button class="btn btn-success" id="update" name="update">Save</button>
+        <input type="button" class="button button2" onclick="clearCanvas()" id="edit" value="Edit">
+        <button class="btn btn-success hide" id="update" name="update">Save</button>
+        <input type="button" class="button button2 hide" onclick="cancelFun()" id="cancel" value="Cancel">
         </form>
         </div>
         </div>
         </div>
 
         </body>
+        <script>
+        var cancel = document.querySelector('#cancel');
+        var save = document.querySelector('#update');
+        
+        function clearCanvas() {
+        	//alert("yoy");
+        	document.getElementById('lastname').disabled = false;
+        	document.getElementById('firstname').disabled = false;
+        	document.getElementById('phone').disabled = false;
+        	document.getElementById('organization').disabled = false;
+        	document.getElementById('address').disabled = false;
+        	save.classList.remove('hide');
+        	cancel.classList.remove('hide');
+        	document.getElementById("edit").classList.add("hide");
+        	//ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        
+        function cancelFun() {
+        	//alert("cancel");
+        	var successUrl = "welcome.jsp";
+            window.location.href = successUrl;
+            
+        }
+        
+        </script>
         </html>
